@@ -16,15 +16,23 @@ jobs:
           version: latest
       
       - name: Link Supabase Project
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }} --password ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD"
+        env:
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         
       - name: Push Secrets to Supabase
         run: |
-          echo "SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}" > .env.production
-          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}" >> .env.production
-          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> .env.production
-          echo "ALLOWED_ORIGIN=${{ secrets.ALLOWED_ORIGIN }}" >> .env.production
+          echo "SUPABASE_SECRET_KEY=$SUPABASE_SECRET_KEY" > .env.production
+          echo "UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL" >> .env.production
+          echo "UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN" >> .env.production
+          echo "ALLOWED_ORIGIN=$ALLOWED_ORIGIN" >> .env.production
           supabase secrets set --env-file .env.production
+        env:
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          ALLOWED_ORIGIN: ${{ secrets.ALLOWED_ORIGIN }}
         
       - name: Deploy Edge Functions
         run: supabase functions deploy --no-verify-jwt
