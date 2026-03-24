@@ -7,7 +7,14 @@ interface AuthUser {
   user_metadata?: Record<string, unknown>
 }
 
-
+/**
+ * Verifies the Authorization header by extracting the Bearer token
+ * and validating it via supabase.auth.getUser().
+ *
+ * Uses VAULT_SECRET_KEY (sb_secret_...) — the key provided in CI.
+ */
+export async function verifyAuth(req: Request): Promise<AuthUser> {
+  const authHeader = req.headers.get('Authorization')
   if (!authHeader?.startsWith('Bearer ')) {
     throw new AppError('Missing or invalid Authorization header', 401)
   }
