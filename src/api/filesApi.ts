@@ -162,7 +162,157 @@ export async function deleteFile(fileId: string, storagePath: string): Promise<v
     console.warn('Storage delete failed:', storageError.message)
   }
 
-  // Delete DB record (cascades to file_keys and shares)
   const { error: dbError } = await supabase.from('files').delete().eq('id', fileId)
   if (dbError) throw new Error(`Failed to delete file: ${dbError.message}`)
 }
+
+export interface ShareRecord {
+  id: string
+  file_id: string
+  shared_by: string
+  shared_with: string | null
+  recipient_email: string | null
+  token: string
+  can_download: boolean
+  can_reshare: boolean
+  created_at: string
+  expires_at: string | null
+  revoked: boolean
+}
+
+/**
+ * Fetch all share records for a specific file.
+ */
+export async function fetchFileShares(fileId: string): Promise<ShareRecord[]> {
+  const { data, error } = await supabase
+    .from('shares')
+    .select('*')
+    .eq('file_id', fileId)
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(`Failed to fetch shares: ${error.message}`)
+  return data || []
+}
+
+/**
+ * Call the edge function to create a new share record and retrieve the recipient's public key.
+ */
+export async function createShareRecord(params: {
+  fileId: string
+  email?: string
+  isPublic?: boolean
+  canDownload?: boolean
+  canReshare?: boolean
+  expiresAt?: string
+}): Promise<{ share: ShareRecord; recipientPublicKey?: string }> {
+  const headers = await getAuthHeaders()
+  const res = await fetch(`${FUNCTIONS_URL}/share-file`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      fileId: params.fileId,
+      recipientEmail: params.email,
+      isPublic: params.isPublic,
+      canDownload: params.canDownload,
+      canReshare: params.canReshare,
+      expiresAt: params.expiresAt,
+    }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Share creation failed' }))
+    throw new Error(err.error || `Share creation failed (${res.status})`)
+  }
+
+  return res.json()
+}
+
+/**
+ * Save a newly re-encrypted file key for a recipient.
+ */
+export async function saveSharedFileKey(params: {
+  fileId: string
+  recipientId: string
+  wrappedKey: string
+}): Promise<void> {
+  const { error } = await supabase.from('file_keys').insert({
+    file_id: params.fileId,
+    user_id: params.recipientId,
+    wrapped_key: params.wrappedKey,
+  })
+
+  if (error) throw new Error(`Failed to save shared file key: ${error.message}`)
+}
+
+/**
+ * Call the edge function to revoke access to a share.
+ */
+export async function revokeAccess(shareId: string): Promise<void> {
+  const headers = await getAuthHeaders()
+  const res = await fetch(`${FUNCTIONS_URL}/revoke-access`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ shareId }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Revoke failed' }))
+    throw new Error(err.error || `Revocation failed (${res.status})`)
+  }
+}
+
+/**
+ * Fetch all files that have been shared with the current user.
+ */
+export async function fetchSharedWithMe() {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  // We fetch files by inner joining `shares` where shared_with = auth.uid()
+  // and we ALSO fetch `file_keys` where user_id = auth.uid() to get our wrapped key for decryption.
+  const { data, error } = await supabase
+    .from('files')
+    .select('*, shares!inner(*), file_keys!inner(wrapped_key)')
+    .eq('shares.shared_with', user.id)
+    .eq('shares.revoked', false)
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(`Failed to fetch shared files: ${error.message}`)
+
+  // For shared files, there may be multiple shares (e.g., if re-shared).
+  // The query returns them grouped by file. PostgREST returns `shares` and `file_keys` as arrays for the 1:N relations.
+  // We normalize the response to match the shape expected by FileCard (a single wrappedKey).
+  return data.map((item: any) => ({
+    ...item,
+    // The inner join ensures file_keys has at least 1 item (the one for the current user)
+    // because `file_keys.user_id = auth.uid()` is enforced by RLS.
+    file_keys: item.file_keys,
+  }))
+}
+
+export interface AuditLog {
+  id: string
+  file_id: string
+  user_id: string
+  action: string
+  ip_address: string | null
+  user_agent: string | null
+  metadata: any
+  created_at: string
+}
+
+/**
+ * Fetch all audit logs for a specific file.
+ */
+export async function fetchFileAuditLogs(fileId: string): Promise<AuditLog[]> {
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .eq('file_id', fileId)
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(`Failed to fetch audit logs: ${error.message}`)
+  return data || []
+}
+
+

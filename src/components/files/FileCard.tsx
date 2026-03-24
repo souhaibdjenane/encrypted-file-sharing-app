@@ -4,6 +4,8 @@ import { deleteFile } from '@/api/filesApi'
 import { useFiles, type DecryptedFile } from '@/hooks/useFiles'
 import { useToast } from '@/components/ui/Toast'
 import { useState } from 'react'
+import { ShareModal } from './ShareModal'
+import { AuditLogViewer } from './AuditLogViewer'
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -39,6 +41,8 @@ export function FileCard({ file }: FileCardProps) {
   const { invalidate } = useFiles()
   const { toast } = useToast()
   const [deleting, setDeleting] = useState(false)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false)
 
   const handleDelete = async () => {
     if (!confirm('Delete this file permanently?')) return
@@ -109,6 +113,24 @@ export function FileCard({ file }: FileCardProps) {
             iv={file.iv}
           />
           <button
+            onClick={() => setIsShareModalOpen(true)}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-emerald-400 bg-emerald-900/20 hover:bg-emerald-900/40 rounded-lg border border-emerald-800/30 transition-all duration-200"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            Share
+          </button>
+          <button
+            onClick={() => setIsAuditModalOpen(true)}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-400 bg-blue-900/20 hover:bg-blue-900/40 rounded-lg border border-blue-800/30 transition-all duration-200"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Activity
+          </button>
+          <button
             onClick={handleDelete}
             disabled={deleting}
             className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-400 bg-red-900/20 hover:bg-red-900/40 rounded-lg border border-red-800/30 transition-all duration-200 disabled:opacity-50"
@@ -124,6 +146,20 @@ export function FileCard({ file }: FileCardProps) {
           </button>
         </div>
       </div>
+
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        fileId={file.id}
+        fileName={file.isDecrypted ? file.name : 'Encrypted File'}
+      />
+
+      <AuditLogViewer
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
+        fileId={file.id}
+        fileName={file.isDecrypted ? file.name : 'Encrypted File'}
+      />
     </motion.div>
   )
 }

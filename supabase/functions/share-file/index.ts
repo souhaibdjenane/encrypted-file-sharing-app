@@ -10,7 +10,8 @@ import { logger } from '../_shared/logger.ts'
 
 const ShareSchema = z.object({
   fileId: z.string().uuid(),
-  recipientEmail: z.string().email(),
+  recipientEmail: z.string().email().optional(),
+  isPublic: z.boolean().default(false),
   canDownload: z.boolean().default(true),
   canReshare: z.boolean().default(false),
   expiresAt: z.string().datetime().optional(),
@@ -32,8 +33,12 @@ Deno.serve(async (req) => {
 
     // Validate input
     const body = await req.json()
-    const { fileId, recipientEmail, canDownload, canReshare, expiresAt } =
+    const { fileId, recipientEmail, isPublic, canDownload, canReshare, expiresAt } =
       ShareSchema.parse(body)
+
+    if (!isPublic && !recipientEmail) {
+      throw new AppError('Must provide recipient email for private shares', 400)
+    }
 
     // Create Supabase admin client
     const supabase = createClient(
@@ -53,47 +58,57 @@ Deno.serve(async (req) => {
       throw new AppError('File not found or you are not the owner', 403)
     }
 
-    // Look up recipient by email via admin auth API
-    const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers()
+    let recipientId: string | null = null
+    let recipientPublicKey: string | null = null
+    let displayEmail: string | null = 'Public Link'
 
-    if (usersError) {
-      logger.error('Failed to list users', { error: usersError.message })
-      throw new AppError('Failed to look up recipient', 500)
-    }
+    if (!isPublic && recipientEmail) {
+      // Look up recipient by email via admin auth API
+      const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers()
 
-    const recipient = usersData.users.find(
-      (u) => u.email?.toLowerCase() === recipientEmail.toLowerCase()
-    )
+      if (usersError) {
+        logger.error('Failed to list users', { error: usersError.message })
+        throw new AppError('Failed to look up recipient', 500)
+      }
 
-    if (!recipient) {
-      throw new AppError('Recipient not found. They must have a VaultShare account.', 404)
-    }
-
-    // Get recipient's public key from user metadata
-    const recipientPublicKey = recipient.user_metadata?.public_key
-    if (!recipientPublicKey) {
-      throw new AppError(
-        'Recipient has not generated encryption keys yet. They must log in first.',
-        400
+      const recipient = usersData.users.find(
+        (u) => u.email?.toLowerCase() === recipientEmail.toLowerCase()
       )
+
+      if (!recipient) {
+        throw new AppError('Recipient not found. They must have a VaultShare account.', 404)
+      }
+
+      // Get recipient's public key from user metadata
+      recipientPublicKey = recipient.user_metadata?.public_key
+      if (!recipientPublicKey) {
+        throw new AppError(
+          'Recipient has not generated encryption keys yet. They must log in first.',
+          400
+        )
+      }
+
+      recipientId = recipient.id
+      displayEmail = recipientEmail
     }
 
     // Generate unique share token
     const token = crypto.randomUUID()
 
     // Insert share record
-    const { error: shareError } = await supabase.from('shares').insert({
+    const { data: share, error: shareError } = await supabase.from('shares').insert({
       file_id: fileId,
       shared_by: user.id,
-      shared_with: recipient.id,
+      shared_with: recipientId,
+      recipient_email: displayEmail,
       token,
       can_download: canDownload,
       can_reshare: canReshare,
       expires_at: expiresAt || null,
-    })
+    }).select().single()
 
-    if (shareError) {
-      logger.error('Failed to create share', { error: shareError.message })
+    if (shareError || !share) {
+      logger.error('Failed to create share', { error: shareError?.message })
       throw new AppError('Failed to create share', 500)
     }
 
@@ -105,8 +120,9 @@ Deno.serve(async (req) => {
       ip_address: req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip'),
       user_agent: req.headers.get('user-agent'),
       metadata: {
-        recipient_email: recipientEmail,
-        recipient_id: recipient.id,
+        recipient_email: displayEmail,
+        recipient_id: recipientId,
+        is_public: isPublic,
         can_download: canDownload,
         can_reshare: canReshare,
       },
@@ -115,14 +131,14 @@ Deno.serve(async (req) => {
     logger.info('File shared', {
       userId: user.id,
       fileId,
-      recipientId: recipient.id,
+      recipientId: recipientId || 'public',
+      isPublic,
     })
 
-    // Return recipient's public key so client can wrap the file key
+    // Return the newly created share and the recipient's public key (if private)
     return new Response(
       JSON.stringify({
-        shareId: token,
-        recipientId: recipient.id,
+        share,
         recipientPublicKey,
       }),
       {

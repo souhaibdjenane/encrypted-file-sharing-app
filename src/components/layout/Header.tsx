@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
 import { useCrypto } from '@/crypto/CryptoProvider'
@@ -7,6 +7,7 @@ export function Header() {
   const { user } = useAuthStore()
   const { isKeysLoaded, isInitializing } = useCrypto()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -16,14 +17,40 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent group-hover:from-emerald-300 group-hover:to-teal-300 transition-all duration-300">
-            VaultShare
-          </span>
-          <span className="text-xl" role="img" aria-label="lock">🔐</span>
-        </Link>
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center gap-2 group">
+            <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent group-hover:from-emerald-300 group-hover:to-teal-300 transition-all duration-300">
+              VaultShare
+            </span>
+            <span className="text-xl" role="img" aria-label="lock">🔐</span>
+          </Link>
+          {user && (
+            <div className="hidden md:flex items-center gap-1 ml-6 bg-zinc-900/50 p-1 rounded-xl border border-zinc-800/50">
+              <Link
+                to="/dashboard"
+                className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                  location.pathname === '/dashboard'
+                    ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700/50'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                }`}
+              >
+                My Files
+              </Link>
+              <Link
+                to="/shared"
+                className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                  location.pathname === '/shared'
+                    ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700/50'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                }`}
+              >
+                Shared
+              </Link>
+            </div>
+          )}
+        </div>
 
-        <nav className="flex items-center gap-3">
+        <nav className="flex items-center gap-4">
           {user ? (
             <>
               {/* Key Status Indicator */}

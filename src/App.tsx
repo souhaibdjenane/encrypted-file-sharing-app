@@ -9,6 +9,8 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import SharedPage from '@/pages/SharedPage'
+import PublicSharePage from '@/pages/PublicSharePage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +39,15 @@ function AppRoutes() {
             </AuthGuard>
           }
         />
+        <Route
+          path="/shared"
+          element={
+            <AuthGuard>
+              <SharedPage />
+            </AuthGuard>
+          }
+        />
+        <Route path="/s/:token" element={<PublicSharePage />} />
       </Route>
     </Routes>
   )

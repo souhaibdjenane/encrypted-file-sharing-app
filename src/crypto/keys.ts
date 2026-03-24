@@ -55,3 +55,25 @@ export async function importPublicKey(base64: string): Promise<CryptoKey> {
     ['wrapKey']
   )
 }
+
+/**
+ * Exports a raw AES-GCM CryptoKey directly to a base64 string for embedding in public URLs.
+ */
+export async function exportRawKeyBase64(key: CryptoKey): Promise<string> {
+  const exported = await crypto.subtle.exportKey('raw', key)
+  return arrayBufferToBase64(exported)
+}
+
+/**
+ * Imports a raw base64 string directly into an AES-GCM CryptoKey.
+ */
+export async function importRawKeyBase64(base64: string): Promise<CryptoKey> {
+  const keyData = base64ToArrayBuffer(base64)
+  return crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'AES-GCM' },
+    true,
+    ['encrypt', 'decrypt']
+  )
+}
