@@ -8,7 +8,6 @@ interface AuthUser {
 }
 
 
-  const authHeader = req.headers.get('Authorization')
   if (!authHeader?.startsWith('Bearer ')) {
     throw new AppError('Missing or invalid Authorization header', 401)
   }
