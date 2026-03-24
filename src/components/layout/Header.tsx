@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
+import { useCrypto } from '@/crypto/CryptoProvider'
 
 export function Header() {
   const { user } = useAuthStore()
+  const { isKeysLoaded, isInitializing } = useCrypto()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -24,6 +26,33 @@ export function Header() {
         <nav className="flex items-center gap-3">
           {user ? (
             <>
+              {/* Key Status Indicator */}
+              <div className="flex items-center gap-1.5" title={
+                isInitializing ? 'Initializing encryption keys...' :
+                isKeysLoaded ? 'Encryption keys loaded' :
+                'Encryption keys not loaded'
+              }>
+                {isInitializing ? (
+                  <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg
+                    className={`w-4 h-4 transition-colors duration-200 ${
+                      isKeysLoaded ? 'text-emerald-400' : 'text-red-400'
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    {isKeysLoaded ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                    )}
+                  </svg>
+                )}
+              </div>
+
               <span className="hidden sm:block text-sm text-zinc-400">
                 {user.email}
               </span>
