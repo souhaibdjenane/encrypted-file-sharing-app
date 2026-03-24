@@ -4,7 +4,6 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.22.4'
 import { corsHeaders, corsResponse } from '../_shared/cors.ts'
 import { verifyAuth } from '../_shared/auth.ts'
-import { rateLimit } from '../_shared/rateLimit.ts'
 import { AppError, errorResponse } from '../_shared/errors.ts'
 import { logger } from '../_shared/logger.ts'
 
@@ -27,9 +26,6 @@ Deno.serve(async (req) => {
 
     // Auth
     const user = await verifyAuth(req)
-
-    // Rate limit: 20 per 5 minutes per user
-    await rateLimit(`share:${user.id}`, 20, 300)
 
     // Validate input
     const body = await req.json()

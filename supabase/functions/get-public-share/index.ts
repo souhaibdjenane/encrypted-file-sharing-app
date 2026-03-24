@@ -1,7 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.22.4'
 import { corsHeaders, corsResponse } from '../_shared/cors.ts'
-import { rateLimit } from '../_shared/rateLimit.ts'
 import { AppError, errorResponse } from '../_shared/errors.ts'
 
 const RequestSchema = z.object({
@@ -13,10 +12,6 @@ Deno.serve(async (req) => {
 
   try {
     if (req.method !== 'POST') throw new AppError('Method not allowed', 405)
-
-    // Rate limit by IP for public endpoint (20 requests per minute)
-    const ip = req.headers.get('x-forwarded-for') || 'unknown'
-    await rateLimit(`public-share:${ip}`, 20, 60)
 
     const body = await req.json()
     const { token } = RequestSchema.parse(body)

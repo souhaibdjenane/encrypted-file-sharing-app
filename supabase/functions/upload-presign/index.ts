@@ -4,7 +4,6 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { z } from 'npm:zod@3.22.4'
 import { corsHeaders, corsResponse } from '../_shared/cors.ts'
 import { verifyAuth } from '../_shared/auth.ts'
-import { rateLimit } from '../_shared/rateLimit.ts'
 import { AppError, errorResponse } from '../_shared/errors.ts'
 import { logger } from '../_shared/logger.ts'
 
@@ -33,14 +32,6 @@ Deno.serve(async (req) => {
       throw authErr;
     }
     logger.info('Upload presign requested', { userId: user.id })
-
-    // Rate limit: 10 per minute per user
-    try {
-      await rateLimit(`upload:${user.id}`, 10, 60)
-    } catch (rlErr) {
-      console.error('[upload-presign] rateLimit failed:', rlErr);
-      throw rlErr;
-    }
 
     // Validate input
     const body = await req.json()

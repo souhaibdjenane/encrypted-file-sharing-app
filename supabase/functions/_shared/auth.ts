@@ -11,7 +11,7 @@ interface AuthUser {
  * Verifies the Authorization header by extracting the Bearer token
  * and validating it via supabase.auth.getUser().
  *
- * Uses VAULT_SECRET_KEY (sb_secret_...) — the key provided in CI.
+ * Uses SUPABASE_SECRET_KEY (sb_secret_...) — the new key format.
  */
 export async function verifyAuth(req: Request): Promise<AuthUser> {
   const authHeader = req.headers.get('Authorization')
@@ -22,7 +22,7 @@ export async function verifyAuth(req: Request): Promise<AuthUser> {
   const token = authHeader.replace('Bearer ', '')
 
   const url = Deno.env.get('SUPABASE_URL')
-  const key = Deno.env.get('VAULT_SECRET_KEY') || Deno.env.get('SERVICE_ROLE_KEY')
+  const key = Deno.env.get('SERVICE_ROLE_KEY')
 
   if (!url || !key) {
     console.error('[verifyAuth] Missing env vars:', { url: !!url, key: !!key })
