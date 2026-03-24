@@ -1,5 +1,10 @@
-import { generateFileKey } from './keys'
+
 import { arrayBufferToBase64 } from './utils'
+import * as Comlink from 'comlink'
+import type { WorkerAPI } from '../workers/encrypt.worker'
+
+const worker = new Worker(new URL('../workers/encrypt.worker.ts', import.meta.url), { type: 'module' })
+const workerAPI = Comlink.wrap<WorkerAPI>(worker)
 
 /**
  * Encrypts a File using a new AES-256-GCM key.
@@ -8,17 +13,9 @@ import { arrayBufferToBase64 } from './utils'
 export async function encryptFile(
   file: File
 ): Promise<{ ciphertext: ArrayBuffer; iv: Uint8Array; fileKey: CryptoKey }> {
-  const fileKey = await generateFileKey()
-  const iv = crypto.getRandomValues(new Uint8Array(12)) // 96-bit IV for GCM
-  const plaintext = await file.arrayBuffer()
-
-  const ciphertext = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
-    fileKey,
-    plaintext
-  )
-
-  return { ciphertext, iv, fileKey }
+  const buffer = await file.arrayBuffer()
+  const result = await workerAPI.encryptFileWorker(Comlink.transfer(buffer, [buffer]))
+  return { ciphertext: result.ciphertext, iv: result.iv, fileKey: result.fileKey }
 }
 
 /**

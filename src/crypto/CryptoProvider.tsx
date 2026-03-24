@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import { useAuthStore } from '@/store/authStore'
 import { generateKeyPair, exportPublicKey } from './keys'
 import { storeKeyPair, loadKeyPair } from './keyStorage'
+import { generateSaltBase64 } from './backup'
 import { supabase } from '@/lib/supabase'
 
 interface CryptoContextValue {
@@ -33,10 +34,12 @@ async function initializeUserKeys(userId: string): Promise<CryptoKeyPair> {
   // Store in IndexedDB
   await storeKeyPair(userId, keyPair)
 
-  // Upload public key to Supabase user metadata
+  // Upload public key and backup salt to Supabase user metadata
   const publicKeyBase64 = await exportPublicKey(keyPair.publicKey)
+  const saltBase64 = generateSaltBase64()
+
   await supabase.auth.updateUser({
-    data: { public_key: publicKeyBase64 },
+    data: { public_key: publicKeyBase64, backup_salt: saltBase64 },
   })
 
   return keyPair

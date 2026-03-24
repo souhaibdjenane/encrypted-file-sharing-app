@@ -1,73 +1,90 @@
-# React + TypeScript + Vite
+# VaultShare 🔐
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+VaultShare is a high-security, end-to-end encrypted file sharing platform designed for absolute data privacy. It relies on a rigorous cryptographic architecture to ensure that the server never stores or views unencrypted files or the keys required to decode them.
 
-Currently, two official plugins are available:
+## 🏗️ Architecture
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+VaultShare utilizes a hybrid cryptography model (RSA-OAEP for asymmetric key exchange, AES-256-GCM for rapid symmetric file encryption).
 
-## React Compiler
+The Web Worker architecture ensures UI fluidity when encrypting massive files off the main browser thread. 
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+                        ┌───────────────────┐
+                        │   User Browser    │
+                        │ (WebCrypto API)   │
+                        └────────┬──────────┘
+                                 │
+     ┌───────────────────────────┴───────────────────────────┐
+     │                                                       │
+ ┌───▼───┐                                               ┌───▼───┐
+ │Vercel │ (Static Frontend)                             │ API   │ (Supabase)
+ └───────┘                                               └───────┘
+     │                                                       │
+     └───────────────────────────────────────────────────────┤
+                                                             │
+                  ┌────────────────────┐          ┌──────────▼──────────┐
+                  │ Edge Functions     │          │    PostgreSQL DB    │
+                  │ (share-file, etc.) │          │ (RLS, Auth, Data)   │
+                  └────────────────────┘          └─────────────────────┘
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛡️ Security Model
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+VaultShare follows a strict Zero-Knowledge pattern:
+1. **File Encryption:** The source file is encrypted entirely in the browser using a randomly generated 256-bit AES-GCM key inside an isolated Web Worker. 
+2. **Metadata Protection:** File names and mime-types are encrypted symmetrically prior to database upload to prevent metadata leakage.
+3. **Key Exchange:** The symmetric AES key is encrypted using the file owner's 4096-bit RSA public key, which is natively generated on their device.
+4. **Resharing Mechanics:** When a user shares a file with a recipient, their client unwraps the AES file key using their RSA private key, limits access via Edge Functions conditionally, and re-wraps the AES key using the *recipient's* RSA public key.
+5. **Key Recovery:** The private RSA key can be symmetrically exported using PBKDF2 derived from the user's password utilizing 600,000 iterations and a uniquely generated 16-byte salt, preventing brute-force attacks on backup files.
+6. **Public Links:** Public files export the raw AES key inside the URL hash (`#key=...`). URL Hash fragments are explicitly withheld by browsers during HTTP requests, guaranteeing the server never observes the secret material.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Hardened Production Build
+- Strict **Content Security Policies** (CSP) blocking external scripts.
+- Magic bytes file type validation to prevent malicious payload uploads under forged mime-types.
+- PII scrubbing on all Sentry telemetry payloads.
+
+## 🚀 Environment Variables
+
+Create a `.env` file referencing your Supabase implementation:
+
+| Variable                      | Where used     | Description                          |
+|-------------------------------|----------------|--------------------------------------|
+| `VITE_SUPABASE_URL`           | Frontend       | Your Supabase project URL            |
+| `VITE_SUPABASE_PUBLISHABLE_KEY`| Frontend       | `sb_publishable_...` key (safe to expose) |
+| `VITE_SENTRY_DSN`             | Frontend       | Sentry error tracking DSN            |
+| `SUPABASE_URL`                | Edge Functions | Auto-injected by Supabase local edge |
+| `SUPABASE_SECRET_KEY`         | Edge Functions | `sb_secret_...` key (set manually via secrets)|
+| `UPSTASH_REDIS_REST_URL`      | Edge Functions | Upstash rate limiting URL            |
+| `UPSTASH_REDIS_REST_TOKEN`    | Edge Functions | Upstash rate limiting token          |
+| `ALLOWED_ORIGIN`              | Edge Functions | CORS allowed origin                  |
+
+## 💻 Local Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/vaultshare.git
+   cd vaultshare
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Initialize the local Supabase environment:**
+   ```bash
+   npx supabase start
+   ```
+4. **Push database migrations to your project via CLI:**
+   ```bash
+   npx supabase db push
+   ```
+5. **Run the local development server:**
+   ```bash
+   npm run dev
+   ```
+
+## 🧪 Pre-Launch Security Checklist
+
+- [x] Web Workers are effectively segregating memory.
+- [x] IndexedDB securely caches non-extractable asymmetric keypairs internally.
+- [x] Rate limiting is enabled via Upstash Redis edge integrations to nullify brute-force key attacks.
+- [x] Supabase Row-Level Security validates auth credentials strictly at the table layer.

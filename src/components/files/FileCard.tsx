@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
 import { DownloadButton } from './DownloadButton'
 import { deleteFile } from '@/api/filesApi'
-import { useFiles, type DecryptedFile } from '@/hooks/useFiles'
+import { type DecryptedFile } from '@/hooks/useFiles'
+import { useQueryClient } from '@tanstack/react-query'
+import { useAuthStore } from '@/store/authStore'
 import { useToast } from '@/components/ui/Toast'
 import { useState } from 'react'
 import { ShareModal } from './ShareModal'
@@ -38,7 +40,8 @@ interface FileCardProps {
 }
 
 export function FileCard({ file }: FileCardProps) {
-  const { invalidate } = useFiles()
+  const queryClient = useQueryClient()
+  const { user } = useAuthStore()
   const { toast } = useToast()
   const [deleting, setDeleting] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
@@ -46,13 +49,21 @@ export function FileCard({ file }: FileCardProps) {
 
   const handleDelete = async () => {
     if (!confirm('Delete this file permanently?')) return
+    
+    // Optimistic UI Update
+    const queryKey = ['files', user?.id]
+    const previousFiles = queryClient.getQueryData(queryKey)
+    queryClient.setQueryData(queryKey, (old: any) => old?.filter((f: any) => f.id !== file.id))
+
     try {
       setDeleting(true)
       await deleteFile(file.id, file.storagePath)
       toast('File deleted', 'success')
-      invalidate()
+      queryClient.invalidateQueries({ queryKey })
     } catch {
       toast('Failed to delete file', 'error')
+      // Rollback
+      queryClient.setQueryData(queryKey, previousFiles)
     } finally {
       setDeleting(false)
     }

@@ -10,4 +10,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+            return 'vendor'
+          }
+          if (id.includes('node_modules/framer-motion')) return 'ui'
+          if (id.includes('node_modules/@supabase')) return 'supabase'
+          if (id.includes('src/crypto')) return 'crypto'
+        }
+      }
+    }
+  }
 })

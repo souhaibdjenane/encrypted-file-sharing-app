@@ -5,6 +5,7 @@ import { arrayBufferToBase64 } from '@/crypto/utils'
 import { useCrypto } from '@/crypto/CryptoProvider'
 import { useAuthStore } from '@/store/authStore'
 import { requestUploadUrl, uploadToStorage, saveFileRecord } from '@/api/filesApi'
+import { validateFileType } from '@/utils/fileValidation'
 
 export type UploadStage = 'idle' | 'encrypting' | 'uploading' | 'saving' | 'done' | 'error'
 
@@ -37,6 +38,9 @@ export function useUpload() {
 
     try {
       setState({ stage: 'encrypting', progress: 0, error: null, fileName: file.name })
+
+      // Step 0: Validate file type
+      await validateFileType(file)
 
       // Step 1: Encrypt the file
       const { ciphertext, iv, fileKey } = await encryptFile(file)

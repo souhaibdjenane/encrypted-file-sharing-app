@@ -1,4 +1,9 @@
 import { base64ToArrayBuffer } from './utils'
+import * as Comlink from 'comlink'
+import type { WorkerAPI } from '../workers/encrypt.worker'
+
+const worker = new Worker(new URL('../workers/encrypt.worker.ts', import.meta.url), { type: 'module' })
+const workerAPI = Comlink.wrap<WorkerAPI>(worker)
 
 /**
  * Decrypts an AES-256-GCM encrypted file.
@@ -9,11 +14,7 @@ export async function decryptFile(
   iv: Uint8Array,
   fileKey: CryptoKey
 ): Promise<ArrayBuffer> {
-  return crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: iv as unknown as BufferSource },
-    fileKey,
-    ciphertext
-  )
+  return workerAPI.decryptFileWorker(Comlink.transfer(ciphertext, [ciphertext]), iv, fileKey)
 }
 
 /**

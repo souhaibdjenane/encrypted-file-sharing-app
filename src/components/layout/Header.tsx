@@ -1,6 +1,8 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
+import { useQueryClient } from '@tanstack/react-query'
+import { fetchUserFiles } from '@/api/filesApi'
 import { useCrypto } from '@/crypto/CryptoProvider'
 
 export function Header() {
@@ -8,6 +10,13 @@ export function Header() {
   const { isKeysLoaded, isInitializing } = useCrypto()
   const navigate = useNavigate()
   const location = useLocation()
+  const queryClient = useQueryClient()
+
+  const prefetchFiles = () => {
+    if (user) {
+      queryClient.prefetchQuery({ queryKey: ['files', user.id], queryFn: () => fetchUserFiles() })
+    }
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -28,6 +37,7 @@ export function Header() {
             <div className="hidden md:flex items-center gap-1 ml-6 bg-zinc-900/50 p-1 rounded-xl border border-zinc-800/50">
               <Link
                 to="/dashboard"
+                onMouseEnter={prefetchFiles}
                 className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                   location.pathname === '/dashboard'
                     ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700/50'
@@ -45,6 +55,16 @@ export function Header() {
                 }`}
               >
                 Shared
+              </Link>
+              <Link
+                to="/settings"
+                className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                  location.pathname === '/settings'
+                    ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700/50'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                }`}
+              >
+                Settings
               </Link>
             </div>
           )}
