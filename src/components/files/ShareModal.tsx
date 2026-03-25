@@ -100,16 +100,16 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
               <div className="p-6 overflow-y-auto custom-scrollbar">
                 
                 {/* Public Link Section */}
-                <div className="mb-6 p-5 rounded-xl border border-emerald-900/40 bg-emerald-500/5 hover:border-emerald-500/30 transition-colors">
+                <div className="mb-6 p-5 rounded-xl border-brand-primary/40 bg-brand-primary/5 hover:border-brand-primary/30 transition-colors">
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
-                      <h3 className="text-sm font-semibold text-emerald-400">Public Link Access</h3>
-                      <p className="text-xs text-emerald-400/70 mt-1 leading-relaxed max-w-[280px]">
+                      <h3 className="text-sm font-semibold text-brand-primary">Public Link Access</h3>
+                      <p className="text-xs text-brand-primary/70 mt-1 leading-relaxed max-w-[280px]">
                         Anyone with the link can decrypt and download this file directly in their browser.
                       </p>
                     </div>
-                    <div className="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <div className="h-8 w-8 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                       </svg>
                     </div>
@@ -118,7 +118,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                   <button
                     onClick={handleCreatePublicLink}
                     disabled={isLoading}
-                    className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex justify-center items-center gap-2"
+                    className="w-full py-2.5 bg-brand-primary hover:bg-brand-secondary text-white px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-brand-primary/20 disabled:opacity-50 flex justify-center items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -135,20 +135,20 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                         className="overflow-hidden"
                       >
                         <label className="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Your Unique Link</label>
-                        <div className="flex bg-zinc-950 border border-emerald-500/30 rounded-xl overflow-hidden shadow-inner ring-1 ring-emerald-500/10">
+                        <div className="flex bg-zinc-950 border border-brand-primary/30 rounded-xl overflow-hidden shadow-inner ring-1 ring-brand-primary/10">
                           <input
                             type="text"
                             readOnly
                             value={generatedLink}
                             onClick={(e) => (e.target as HTMLInputElement).select()}
-                            className="bg-transparent text-emerald-300 text-xs py-3 px-4 w-full focus:outline-none"
+                            className="bg-transparent text-brand-primary text-xs py-3 px-4 w-full focus:outline-none"
                           />
                           <button
                             onClick={() => {
                               navigator.clipboard.writeText(generatedLink)
                               toast('Copied!', 'success')
                             }}
-                            className="px-4 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-medium border-l border-emerald-500/30 transition-colors"
+                            className="px-4 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary text-xs font-medium border-l border-brand-primary/30 transition-colors"
                           >
                             Copy
                           </button>
@@ -203,7 +203,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                               Public Link
                             </p>
                             <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
-                              <span className={share.can_download ? 'text-emerald-400/80' : 'text-zinc-500'}>
+                              <span className={share.can_download ? 'text-brand-primary/80' : 'text-zinc-500'}>
                                 {share.can_download ? 'Can Download' : 'View Only'}
                               </span>
                               {share.expires_at && (

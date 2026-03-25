@@ -85,7 +85,7 @@ export function FileUploader() {
         onClick={() => !isUploading && inputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${
           isDragOver
-            ? 'border-emerald-400 bg-emerald-500/10'
+            ? 'border-brand-primary bg-brand-primary/10'
             : 'border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/30'
         } ${isUploading ? 'pointer-events-none opacity-70' : ''}`}
       >
@@ -102,7 +102,7 @@ export function FileUploader() {
 
         <div className="flex flex-col items-center gap-3">
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-            isDragOver ? 'bg-emerald-500/20' : 'bg-zinc-800'
+            isDragOver ? 'bg-brand-primary/20' : 'bg-zinc-800'
           }`}>
             <svg className="w-6 h-6 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -168,7 +168,7 @@ export function FileUploader() {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-zinc-300 font-medium truncate mr-2">{fileName}</span>
                 <span className={`text-xs font-medium ${
-                  stage === 'done' ? 'text-emerald-400' : stage === 'error' ? 'text-red-400' : 'text-zinc-400'
+                  stage === 'done' ? 'text-brand-primary' : stage === 'error' ? 'text-red-400' : 'text-zinc-400'
                 }`}>
                   {stageLabels[stage]}
                 </span>
@@ -178,7 +178,7 @@ export function FileUploader() {
               <div className="h-1.5 bg-zinc-700 rounded-full overflow-hidden">
                 <motion.div
                   className={`h-full rounded-full ${
-                    stage === 'error' ? 'bg-red-500' : stage === 'done' ? 'bg-emerald-500' : 'bg-emerald-500'
+                    stage === 'error' ? 'bg-red-500' : stage === 'done' ? 'bg-brand-primary' : 'bg-brand-primary'
                   }`}
                   initial={{ width: 0 }}
                   animate={{ width: `${overallProgress}%` }}

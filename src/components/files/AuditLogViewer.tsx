@@ -37,7 +37,7 @@ export function AuditLogViewer({ isOpen, onClose, fileId, fileName }: AuditLogVi
   const getActionInfo = (action: string) => {
     switch (action) {
       case 'upload':
-        return { label: 'Uploaded', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12', color: 'text-emerald-400', bg: 'bg-emerald-400/10' }
+        return { label: 'Uploaded', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12', color: 'text-brand-primary', bg: 'bg-brand-primary/10' }
       case 'download':
         return { label: 'Downloaded', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4', color: 'text-blue-400', bg: 'bg-blue-400/10' }
       case 'share':

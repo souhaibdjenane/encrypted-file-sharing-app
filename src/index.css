@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+:root {
+  --brand-primary: #007DFF;
+  --brand-secondary: #019EEC;
+  --brand-accent: #02B7DF;
+  --brand-font: 'Inter', sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,12 +19,13 @@
   }
 
   body {
-    @apply bg-zinc-950 text-zinc-100 font-['Inter',sans-serif] antialiased;
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+    font-family: var(--brand-font);
     min-height: 100vh;
   }
 
   ::selection {
-    @apply bg-emerald-500/30 text-emerald-200;
+    @apply bg-brand-primary/30 text-brand-primary/50;
   }
 
   ::-webkit-scrollbar {
@@ -39,8 +47,8 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl
-           transition-all duration-200 ease-out hover:shadow-lg hover:shadow-emerald-500/25
+    @apply px-4 py-2 bg-brand-primary hover:bg-brand-secondary text-white font-semibold rounded-lg
+           transition-all duration-200 ease-out hover:shadow-lg hover:shadow-brand-primary/25
            active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
@@ -52,8 +60,8 @@
 
   .input-field {
     @apply w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-zinc-100
-           placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50
-           focus:border-emerald-500 transition-all duration-200;
+           placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50
+           focus:border-brand-primary transition-all duration-200;
   }
 
   .card {

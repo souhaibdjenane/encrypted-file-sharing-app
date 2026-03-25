@@ -178,7 +178,7 @@ export default function SettingsPage() {
           <section className="bg-zinc-900/50 border border-zinc-800/60 rounded-2xl p-6 sm:p-8">
             <h2 className="text-xl font-semibold text-white mb-6">Encryption Keys</h2>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${isKeysLoaded ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${isKeysLoaded ? 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
                 {isKeysLoaded ? (
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                 {fingerprint && (
                   <div className="mt-2">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Key Fingerprint (SHA-256)</p>
-                    <code className="text-xs text-emerald-400/80 bg-emerald-400/5 px-3 py-1.5 rounded-lg border border-emerald-500/10 font-mono tracking-widest break-all inline-block">
+                    <code className="text-xs text-brand-primary/80 bg-brand-primary/5 px-3 py-1.5 rounded-lg border border-brand-primary/10 font-mono tracking-widest break-all inline-block">
                       {fingerprint}
                     </code>
                   </div>
@@ -222,7 +222,7 @@ export default function SettingsPage() {
                   disabled={!isKeysLoaded}
                   value={backupPassword}
                   onChange={(e) => setBackupPassword(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono text-sm"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all font-mono text-sm"
                 />
                 <button
                   type="submit"
@@ -256,7 +256,7 @@ export default function SettingsPage() {
                   placeholder="Enter backup password"
                   value={restorePassword}
                   onChange={(e) => setRestorePassword(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono text-sm"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all font-mono text-sm"
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}

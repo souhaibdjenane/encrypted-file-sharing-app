@@ -172,7 +172,7 @@ export default function PublicSharePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center">
-        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
         <p className="mt-4 text-zinc-400 font-medium">Decrypting connection...</p>
       </div>
     )
@@ -182,10 +182,10 @@ export default function PublicSharePage() {
     <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4">
       <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
         {/* Glow effect */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
 
         <div className="flex justify-center mb-8">
-          <div className="bg-emerald-500/10 text-emerald-400 p-4 rounded-full ring-1 ring-emerald-500/20">
+          <div className="bg-brand-primary/10 text-brand-primary p-4 rounded-full ring-1 ring-brand-primary/20">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -209,7 +209,7 @@ export default function PublicSharePage() {
               <span>•</span>
               <span className="truncate max-w-[150px]">{fileMeta.type || 'Unknown Type'}</span>
               <span>•</span>
-              <span className="flex items-center gap-1 text-emerald-400/80">
+              <span className="flex items-center gap-1 text-brand-primary/80">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
@@ -220,18 +220,18 @@ export default function PublicSharePage() {
             <button
               onClick={handleDownload}
               disabled={isDownloading}
-              className="w-full relative bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] disabled:opacity-50 overflow-hidden flex items-center justify-center gap-2"
+              className="w-full relative bg-brand-primary hover:bg-brand-secondary text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(0,125,255,0.2)] hover:shadow-[0_0_25px_rgba(0,125,255,0.4)] disabled:opacity-50 overflow-hidden flex items-center justify-center gap-2"
             >
               {isDownloading ? (
-                <div className="absolute inset-0 bg-emerald-500/20">
+                <div className="absolute inset-0 bg-brand-primary/20">
                   <motion.div
-                    className="h-full bg-emerald-600/30"
+                    className="h-full bg-brand-secondary/30"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ ease: "linear", duration: 0.2 }}
                   />
-                  <span className="absolute inset-0 flex items-center justify-center text-emerald-950 gap-2">
-                    <div className="w-4 h-4 border-2 border-emerald-950 border-t-transparent rounded-full animate-spin" />
+                  <span className="absolute inset-0 flex items-center justify-center text-white gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Decrypting ({progress}%)
                   </span>
                 </div>

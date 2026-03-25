@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore'
 import { useQueryClient } from '@tanstack/react-query'
 import { fetchUserFiles } from '@/api/filesApi'
 import { useCrypto } from '@/crypto/CryptoProvider'
+import logo from '@/assets/VaultShare-logo.svg'
 
 export function Header() {
   const { user } = useAuthStore()
@@ -28,10 +29,10 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent group-hover:from-emerald-300 group-hover:to-teal-300 transition-all duration-300">
+            <img src={logo} alt="VaultShare Logo" className="h-8 w-auto group-hover:opacity-80 transition-opacity" />
+            <span className="text-xl font-bold bg-gradient-brand bg-clip-text text-transparent group-hover:opacity-80 transition-all duration-300">
               VaultShare
             </span>
-            <span className="text-xl" role="img" aria-label="lock">🔐</span>
           </Link>
           {user && (
             <div className="hidden md:flex items-center gap-1 ml-6 bg-zinc-900/50 p-1 rounded-xl border border-zinc-800/50">
