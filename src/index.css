@@ -1,4 +1,12 @@
-@import './styles/fonts.css';
+@import url('https://fonts.googleapis.com/css2?family=Sansation:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Alyamama';
+  src: local('Alyamama');
+  font-weight: 100 900;
+  font-display: swap;
+}
 
 :root {
   --brand-primary: #007DFF;
@@ -19,8 +27,8 @@
   }
 
   body {
-    @apply bg-zinc-950 text-zinc-100 antialiased;
-    font-family: var(--brand-font);
+    @apply bg-zinc-950 text-zinc-100 antialiased font-sans;
+    font-family: var(--brand-font) !important;
     min-height: 100vh;
     background-image:
       radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);

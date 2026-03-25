@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["'Sansation'", "'Inter'", "sans-serif"],
+        arabic: ["'Alyamama'", "'Cairo'", "sans-serif"],
+      },
       colors: {
         brand: {
           primary: 'var(--brand-primary)',

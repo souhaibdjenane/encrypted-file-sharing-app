@@ -8,6 +8,7 @@ export const theme = {
     foreground: '#f4f4f5', // zinc-100
   },
   fonts: {
-    sans: "'Inter', sans-serif",
+    sans: "'Sansation', 'Inter', sans-serif",
+    arabic: "'Alyamama', 'Cairo', sans-serif",
   },
 }

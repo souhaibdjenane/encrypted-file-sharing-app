@@ -66,7 +66,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     const info = locales[locale]
     document.documentElement.dir = info.dir
     document.documentElement.lang = locale
-    document.body.style.fontFamily = info.font
+    document.documentElement.style.setProperty('--brand-font', info.font)
   }, [locale])
 
   const value: I18nContextValue = {
