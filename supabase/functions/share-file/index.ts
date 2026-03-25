@@ -14,6 +14,7 @@ const ShareSchema = z.object({
   canDownload: z.boolean().default(true),
   canReshare: z.boolean().default(false),
   expiresAt: z.string().datetime().optional(),
+  wrappedKey: z.string().optional(),
 })
 
 Deno.serve(async (req) => {
@@ -29,7 +30,7 @@ Deno.serve(async (req) => {
 
     // Validate input
     const body = await req.json()
-    const { fileId, recipientEmail, isPublic, canDownload, canReshare, expiresAt } =
+    const { fileId, recipientEmail, isPublic, canDownload, canReshare, expiresAt, wrappedKey } =
       ShareSchema.parse(body)
 
     if (!isPublic && !recipientEmail) {
@@ -91,21 +92,70 @@ Deno.serve(async (req) => {
     // Generate unique share token
     const token = crypto.randomUUID()
 
-    // Insert share record
-    const { data: share, error: shareError } = await supabase.from('shares').insert({
-      file_id: fileId,
-      shared_by: user.id,
-      shared_with: recipientId,
-      recipient_email: displayEmail,
-      token,
-      can_download: canDownload,
-      can_reshare: canReshare,
-      expires_at: expiresAt || null,
-    }).select().single()
+    // Check if a non-revoked share already exists for this recipient
+    // (client may call twice: once without wrappedKey to get public key, once with wrappedKey to save it)
+    const { data: existingShare } = await supabase
+      .from('shares')
+      .select('id')
+      .eq('file_id', fileId)
+      .eq('shared_with', recipientId)
+      .eq('revoked', false)
+      .single()
+
+    let share
+    let shareError
+
+    // Only create a new share if one doesn't exist or if we're on the first call (wrappedKey not provided yet)
+    if (!existingShare && !wrappedKey) {
+      // First call: create share and return public key
+      const insertResult = await supabase.from('shares').insert({
+        file_id: fileId,
+        shared_by: user.id,
+        shared_with: recipientId,
+        recipient_email: displayEmail,
+        token,
+        can_download: canDownload,
+        can_reshare: canReshare,
+        expires_at: expiresAt || null,
+      }).select().single()
+
+      share = insertResult.data
+      shareError = insertResult.error
+    } else if (existingShare) {
+      // Follow-up call: use the existing share
+      const { data: existingData, error: existingError } = await supabase
+        .from('shares')
+        .select('*')
+        .eq('id', existingShare.id)
+        .single()
+
+      share = existingData
+      shareError = existingError
+    } else {
+      // Edge case: wrappedKey provided but no existing share
+      throw new AppError('Share not found. Try again without wrapped key first.', 404)
+    }
 
     if (shareError || !share) {
       logger.error('Failed to create share', { error: shareError?.message })
       throw new AppError('Failed to create share', 500)
+    }
+
+    // For private shares, save the wrapped key (server-side so it bypasses RLS)
+    if (!isPublic && recipientId && wrappedKey) {
+      const { error: keyError } = await supabase.from('file_keys').upsert(
+        {
+          file_id: fileId,
+          user_id: recipientId,
+          wrapped_key: wrappedKey,
+        },
+        { onConflict: 'file_id,user_id' }
+      )
+
+      if (keyError) {
+        logger.error('Failed to save wrapped key', { error: keyError.message })
+        throw new AppError('Failed to save shared key', 500)
+      }
     }
 
     // Audit log

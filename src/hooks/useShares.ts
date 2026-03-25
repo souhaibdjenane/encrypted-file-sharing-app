@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { fetchFileShares, createShareRecord, saveSharedFileKey, revokeAccess, type ShareRecord } from '@/api/filesApi'
+import { fetchFileShares, createShareRecord, saveSharedFileKey, revokeAccess, getAuthHeaders, type ShareRecord } from '@/api/filesApi'
 import { useCrypto } from '@/crypto/CryptoProvider'
 import { unwrapFileKey, wrapFileKey } from '@/crypto/keyWrap'
 import { importPublicKey, exportRawKeyBase64 } from '@/crypto/keys'
+
+const FUNCTIONS_URL = '/api'
 
 export function useShares(fileId: string) {
   const [shares, setShares] = useState<ShareRecord[]>([])
@@ -58,7 +60,41 @@ export function useShares(fileId: string) {
       // 2. Unwrap the file key
       const rawFileKey = await unwrapFileKey(fileKeys.wrapped_key, keyPair.privateKey)
 
-      // 3. Create share record and get recipient's public key from Edge Function
+      // 3. For private shares, get recipient's public key first
+      let wrappedForRecipient: string | undefined = undefined
+      if (!isPublic && email) {
+        // Call edge function to get recipient details (public key, validate ownership)
+        const headers = await getAuthHeaders()
+        const preRes = await fetch(`${FUNCTIONS_URL}/share-file`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            fileId,
+            recipientEmail: email,
+            isPublic: false,
+            canDownload,
+            canReshare,
+            expiresAt,
+            // wrappedKey omitted on first call - just to get public key
+          }),
+        })
+
+        if (!preRes.ok) {
+          const err = await preRes.json().catch(() => ({ error: 'Share creation failed' }))
+          throw new Error(err.error || `Share creation failed (${preRes.status})`)
+        }
+
+        const preData = await preRes.json()
+        const { recipientPublicKey } = preData
+
+        if (!recipientPublicKey) throw new Error('Failed to get recipient public key')
+
+        // Wrap the key with recipient's public key
+        const recipientCryptoKey = await importPublicKey(recipientPublicKey)
+        wrappedForRecipient = await wrapFileKey(rawFileKey, recipientCryptoKey)
+      }
+
+      // 4. Create share record with wrapped key (or public link without key)
       const { share, recipientPublicKey } = await createShareRecord({
         fileId,
         email,
@@ -66,6 +102,7 @@ export function useShares(fileId: string) {
         canDownload,
         canReshare,
         expiresAt,
+        wrappedKey: wrappedForRecipient,
       })
 
       if (isPublic) {
@@ -77,20 +114,8 @@ export function useShares(fileId: string) {
         return { share, publicUrl }
       }
 
-      if (!recipientPublicKey || !email) throw new Error('Missing recipient details')
-
-      // 4. Import recipient public key and wrap the file key
-      const recipientCryptoKey = await importPublicKey(recipientPublicKey)
-      const wrappedForRecipient = await wrapFileKey(rawFileKey, recipientCryptoKey)
-
-      // 5. Save the new wrapped key
-      await saveSharedFileKey({
-        fileId,
-        recipientId: share.shared_with as string, // Might be null for public links, but sharing via email requires recipientId
-        wrappedKey: wrappedForRecipient,
-      })
-
-      // 6. Refresh list
+      // For private shares, file_keys was already created by edge function
+      // Just refresh and return
       await loadShares()
       return share
     } catch (err: any) {

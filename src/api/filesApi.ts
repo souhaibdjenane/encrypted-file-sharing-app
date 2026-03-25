@@ -5,7 +5,7 @@ const FUNCTIONS_URL = '/api'
 /**
  * Helper to get auth headers for Edge Function calls.
  */
-async function getAuthHeaders(): Promise<Record<string, string>> {
+export async function getAuthHeaders(): Promise<Record<string, string>> {
   const { data } = await supabase.auth.getSession()
   const token = data.session?.access_token
   if (!token) throw new Error('Not authenticated')
@@ -204,6 +204,7 @@ export async function createShareRecord(params: {
   canDownload?: boolean
   canReshare?: boolean
   expiresAt?: string
+  wrappedKey?: string
 }): Promise<{ share: ShareRecord; recipientPublicKey?: string }> {
   const headers = await getAuthHeaders()
   const res = await fetch(`${FUNCTIONS_URL}/share-file`, {
@@ -216,6 +217,7 @@ export async function createShareRecord(params: {
       canDownload: params.canDownload,
       canReshare: params.canReshare,
       expiresAt: params.expiresAt,
+      wrappedKey: params.wrappedKey,
     }),
   })
 
