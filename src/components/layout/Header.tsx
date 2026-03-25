@@ -53,7 +53,7 @@ export function Header() {
                   onMouseEnter={prefetchFiles}
                   className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                     location.pathname === '/dashboard'
-                      ? 'text-white'
+                      ? 'text-[var(--foreground)]'
                       : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--glass-bg)]'
                   }`}
                 >
@@ -66,7 +66,7 @@ export function Header() {
                   to="/settings"
                   className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                     location.pathname === '/settings'
-                      ? 'text-white'
+                      ? 'text-[var(--foreground)]'
                       : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--glass-bg)]'
                   }`}
                 >
@@ -211,14 +211,14 @@ export function Header() {
                 <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}
                   className={`block px-4 py-3 text-sm font-medium rounded-xl transition-all ${
                     location.pathname === '/dashboard'
-                      ? 'text-white bg-brand-primary/10 border border-brand-primary/20'
+                      ? 'text-[var(--foreground)] bg-brand-primary/10 border border-brand-primary/20'
                       : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--glass-bg)]'
                   }`}
                 >{t.nav.myFiles}</Link>
                 <Link to="/settings" onClick={() => setMobileMenuOpen(false)}
                   className={`block px-4 py-3 text-sm font-medium rounded-xl transition-all ${
                     location.pathname === '/settings'
-                      ? 'text-white bg-brand-primary/10 border border-brand-primary/20'
+                      ? 'text-[var(--foreground)] bg-brand-primary/10 border border-brand-primary/20'
                       : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--glass-bg)]'
                   }`}
                 >{t.nav.settings}</Link>
