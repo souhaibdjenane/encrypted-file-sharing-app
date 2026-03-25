@@ -161,18 +161,18 @@ export default function PublicSharePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-zinc-950">
+      <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-[var(--background)]">
         <div className="absolute top-[-100px] left-[30%] w-[300px] h-[300px] rounded-full animate-float-slow pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(0,125,255,0.06) 0%, transparent 70%)' }} />
         <div className="w-12 h-12 rounded-full animate-spin relative z-10"
-          style={{ border: '3px solid rgba(63,63,70,0.3)', borderTopColor: 'var(--brand-primary)' }} />
-        <p className="mt-4 text-zinc-400 font-medium relative z-10">{t.publicShare.decryptingConnection}</p>
+          style={{ border: '3px solid var(--card-border)', borderTopColor: 'var(--brand-primary)' }} />
+        <p className="mt-4 text-[var(--muted)] font-medium relative z-10">{t.publicShare.decryptingConnection}</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-zinc-950">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[var(--background)]">
       {/* Header-like Logo & Lang Switcher */}
       <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-2">
@@ -183,19 +183,19 @@ export default function PublicSharePage() {
         {/* Compact Lang Switcher for Public Page */}
         <div className="relative">
           <button onClick={() => setLangMenuOpen(!langMenuOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 rounded-lg transition-all glass border border-zinc-800/60"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold text-[var(--muted)] hover:text-[var(--foreground)] rounded-lg transition-all glass border border-[var(--header-border)]"
           >
             <span className="uppercase">{locales[locale].shortName}</span>
           </button>
           <AnimatePresence>
             {langMenuOpen && (
               <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-                className="absolute top-full end-0 mt-1 py-1 rounded-xl glass border border-zinc-700/40 min-w-[100px] shadow-xl z-50 overflow-hidden"
+                className="absolute top-full end-0 mt-1 py-1 rounded-xl glass border border-[var(--card-border)] min-w-[100px] shadow-xl z-50 overflow-hidden"
               >
                 {(Object.keys(locales) as Locale[]).map((code) => (
                   <button key={code} onClick={() => { setLocale(code); setLangMenuOpen(false) }}
                     className={`w-full text-start px-3 py-1.5 text-[10px] font-bold transition-colors ${
-                      locale === code ? 'text-brand-primary bg-brand-primary/10' : 'text-zinc-400 hover:bg-zinc-800/50'
+                      locale === code ? 'text-brand-primary bg-brand-primary/10' : 'text-[var(--muted)] hover:bg-[var(--glass-bg)]'
                     }`}
                   >
                     {locales[code].shortName} - {locales[code].nativeName}
@@ -227,15 +227,15 @@ export default function PublicSharePage() {
 
         {error ? (
           <div className="text-center space-y-4 relative z-10">
-            <h2 className="text-2xl font-bold text-white">{t.publicShare.linkUnavailable}</h2>
-            <p className="text-red-400 text-sm px-4 py-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)' }}>
+            <h2 className="text-2xl font-bold">{t.publicShare.linkUnavailable}</h2>
+            <p className="text-red-500 dark:text-red-400 text-sm px-4 py-3 rounded-xl bg-red-500/5 border border-red-500/15">
               {error}
             </p>
           </div>
         ) : fileMeta && (
           <div className="text-center relative z-10">
-            <h2 className="text-2xl font-bold text-white mb-2 tracking-tight break-all">{fileMeta.name}</h2>
-            <div className="flex flex-wrap items-center justify-center gap-2 text-zinc-400 text-sm mb-8">
+            <h2 className="text-2xl font-bold mb-2 tracking-tight break-all">{fileMeta.name}</h2>
+            <div className="flex flex-wrap items-center justify-center gap-2 text-[var(--muted)] text-sm mb-8">
               <span>{formatSize(fileMeta.size)}</span>
               <span>•</span>
               <span className="truncate max-w-[150px]">{fileMeta.type || 'Unknown Type'}</span>
@@ -265,7 +265,7 @@ export default function PublicSharePage() {
                 </>
               )}
             </button>
-            <p className="mt-4 text-xs text-zinc-600 leading-relaxed">{t.publicShare.footerNote}</p>
+            <p className="mt-4 text-xs opacity-50 leading-relaxed">{t.publicShare.footerNote}</p>
           </div>
         )}
       </motion.div>

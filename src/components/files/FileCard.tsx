@@ -78,10 +78,10 @@ export function FileCard({ file }: FileCardProps) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-zinc-200 truncate">
+            <h3 className="text-sm font-semibold truncate">
               {file.isDecrypted ? file.name : (
-                <span className="flex items-center gap-1.5">
-                  <svg className="w-3 h-3 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <span className="flex items-center gap-1.5 grayscale opacity-60">
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   {t.file.encryptedFile}
@@ -89,12 +89,12 @@ export function FileCard({ file }: FileCardProps) {
               )}
             </h3>
             {file.expiresAt && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-900/40 text-amber-400 border border-amber-800/50 flex-shrink-0">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400 border border-amber-500/20 flex-shrink-0">
                 {t.file.expires} {formatDate(file.expiresAt)}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+          <div className="flex items-center gap-3 mt-1 text-xs text-[var(--muted)]">
             <span>{formatSize(file.fileSizeBytes)}</span>
             <span>·</span>
             <span>{formatDate(file.createdAt)}</span>
@@ -107,8 +107,7 @@ export function FileCard({ file }: FileCardProps) {
         <div className="flex items-center gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 flex-wrap sm:flex-nowrap">
           <DownloadButton fileId={file.id} wrappedKey={file.wrappedKey} iv={file.iv} />
           <button onClick={() => setIsShareModalOpen(true)}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-brand-primary rounded-lg transition-all duration-200"
-            style={{ background: 'rgba(0,125,255,0.08)', border: '1px solid rgba(0,125,255,0.2)' }}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-brand-primary rounded-lg transition-all duration-200 bg-[var(--accent-glow)] border border-brand-primary/20"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -116,8 +115,7 @@ export function FileCard({ file }: FileCardProps) {
             {t.file.share}
           </button>
           <button onClick={handleDelete} disabled={deleting}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-400 rounded-lg transition-all duration-200 disabled:opacity-50"
-            style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-500 dark:text-red-400 rounded-lg transition-all duration-200 disabled:opacity-50 bg-red-500/5 border border-red-500/20"
           >
             {deleting ? (
               <div className="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />

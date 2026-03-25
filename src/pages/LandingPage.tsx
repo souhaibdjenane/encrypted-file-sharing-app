@@ -28,7 +28,7 @@ export function LandingPage() {
       <div className="absolute bottom-[-100px] left-[-100px] w-[400px] h-[400px] rounded-full animate-float pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(2,183,223,0.06) 0%, transparent 70%)' }} />
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28 lg:py-36">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto"
         >
@@ -43,11 +43,11 @@ export function LandingPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-            <span className="text-zinc-100">{t.landing.heroTitle1}</span>
+            <span className="">{t.landing.heroTitle1}</span>
             <span className="bg-gradient-brand bg-clip-text text-transparent">{t.landing.heroTitle2}</span>
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 text-lg sm:text-xl opacity-70 max-w-2xl mx-auto leading-relaxed">
             {t.landing.heroDescription}
           </p>
 
@@ -67,7 +67,7 @@ export function LandingPage() {
           className="mt-16 flex flex-wrap items-center justify-center gap-6 sm:gap-10"
         >
           {stats.map((stat, i) => (
-            <div key={i} className="flex items-center gap-2 text-zinc-500 text-sm">
+            <div key={i} className="flex items-center gap-2 text-[var(--muted)] text-sm">
               <svg className="w-4 h-4 text-brand-primary/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={stat.icon} />
               </svg>
@@ -89,8 +89,8 @@ export function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d={card.icon} />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-zinc-100 mb-2">{card.title}</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">{card.description}</p>
+              <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
+              <p className="text-sm text-[var(--muted)] leading-relaxed">{card.description}</p>
             </motion.div>
           ))}
         </div>

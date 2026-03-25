@@ -128,8 +128,8 @@ export default function SettingsPage() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         className="mb-8 sm:mb-10"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{t.settings.title}</h1>
-        <p className="text-zinc-400 mt-1.5 text-sm">{t.settings.subtitle}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t.settings.title}</h1>
+        <p className="text-[var(--muted)] mt-1.5 text-sm">{t.settings.subtitle}</p>
       </motion.div>
 
       <div className="space-y-6">
@@ -138,8 +138,8 @@ export default function SettingsPage() {
         <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.4 }}
           className="card"
         >
-          <h2 className="text-lg font-semibold text-white mb-1">{t.settings.language}</h2>
-          <p className="text-sm text-zinc-400 mb-5">{t.settings.languageDesc}</p>
+          <h2 className="text-lg font-semibold mb-1">{t.settings.language}</h2>
+          <p className="text-sm text-[var(--muted)] mb-5">{t.settings.languageDesc}</p>
           <div className="flex flex-wrap gap-3">
             {(Object.keys(locales) as Locale[]).map((code) => (
               <button
@@ -148,15 +148,12 @@ export default function SettingsPage() {
                 className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                   locale === code
                     ? 'text-white'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    : 'text-[var(--muted)] hover:text-[var(--foreground)]'
                 }`}
                 style={locale === code ? {
                   background: 'linear-gradient(135deg, var(--brand-primary), var(--brand-accent))',
                   boxShadow: '0 0 15px rgba(0,125,255,0.2)',
-                } : {
-                  background: 'rgba(39,39,42,0.5)',
-                  border: '1px solid rgba(63,63,70,0.4)',
-                }}
+                } : {}}
               >
                 {(t.nav.languages as any)[code]}
               </button>
@@ -168,14 +165,14 @@ export default function SettingsPage() {
         <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
           className="card"
         >
-          <h2 className="text-lg font-semibold text-white mb-5">{t.settings.encryptionKeys}</h2>
+          <h2 className="text-lg font-semibold mb-5">{t.settings.encryptionKeys}</h2>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0`}
-              style={{
-                background: isKeysLoaded ? 'rgba(0,125,255,0.08)' : 'rgba(239,68,68,0.08)',
-                border: `1px solid ${isKeysLoaded ? 'rgba(0,125,255,0.15)' : 'rgba(239,68,68,0.15)'}`,
-                color: isKeysLoaded ? 'var(--brand-primary)' : '#f87171',
-              }}
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-[var(--accent-glow)] border border-brand-primary/15 text-brand-primary`}
+              style={!isKeysLoaded ? {
+                background: 'rgba(239,68,68,0.08)',
+                border: '1px solid rgba(239,68,68,0.15)',
+                color: '#f87171',
+              } : {}}
             >
               {isKeysLoaded ? (
                 <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,14 +185,13 @@ export default function SettingsPage() {
               )}
             </div>
             <div>
-              <h3 className="text-zinc-200 font-medium text-base">
+              <h3 className="font-medium text-base">
                 {isKeysLoaded ? t.settings.keysActive : t.settings.keysNotFound}
               </h3>
               {fingerprint && (
                 <div className="mt-2">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{t.settings.fingerprint}</p>
-                  <code className="text-xs text-brand-primary/80 px-3 py-1.5 rounded-lg font-mono tracking-widest break-all inline-block"
-                    style={{ background: 'rgba(0,125,255,0.05)', border: '1px solid rgba(0,125,255,0.1)' }}
+                  <p className="text-xs text-[var(--muted)] uppercase tracking-wider mb-1">{t.settings.fingerprint}</p>
+                  <code className="text-xs text-brand-primary/80 px-3 py-1.5 rounded-lg font-mono tracking-widest break-all inline-block bg-[var(--accent-glow)] border border-brand-primary/10"
                   >{fingerprint}</code>
                 </div>
               )}
@@ -208,38 +204,36 @@ export default function SettingsPage() {
           className="grid md:grid-cols-2 gap-6"
         >
           <form onSubmit={handleBackup} className="card flex flex-col">
-            <h2 className="text-lg font-semibold text-white mb-1">{t.settings.exportKey}</h2>
-            <p className="text-sm text-zinc-400 mb-5">{t.settings.exportDesc}</p>
+            <h2 className="text-lg font-semibold mb-1">{t.settings.exportKey}</h2>
+            <p className="text-sm text-[var(--muted)] mb-5">{t.settings.exportDesc}</p>
             <div className="mt-auto space-y-3">
               <input type="password" placeholder={t.settings.backupPassword} required disabled={!isKeysLoaded}
                 value={backupPassword} onChange={(e) => setBackupPassword(e.target.value)} className="input-field font-mono text-sm" />
               <button type="submit" disabled={!isKeysLoaded || isProcessingBackup}
-                className="w-full font-medium py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-white"
-                style={{ background: 'rgba(39,39,42,0.6)', border: '1px solid rgba(63,63,70,0.4)' }}
+                className="w-full font-medium py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-[var(--foreground)] bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] border border-[var(--card-border)]"
               >
                 {isProcessingBackup ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <><svg className="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>{t.settings.downloadBackup}</>
+                  <><svg className="w-5 h-5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>{t.settings.downloadBackup}</>
                 )}
               </button>
             </div>
           </form>
 
           <div className="card flex flex-col">
-            <h2 className="text-lg font-semibold text-white mb-1">{t.settings.restoreKeys}</h2>
-            <p className="text-sm text-zinc-400 mb-5">{t.settings.restoreDesc}</p>
+            <h2 className="text-lg font-semibold mb-1">{t.settings.restoreKeys}</h2>
+            <p className="text-sm text-[var(--muted)] mb-5">{t.settings.restoreDesc}</p>
             <div className="mt-auto space-y-3">
               <input type="password" placeholder={t.settings.enterBackupPassword}
                 value={restorePassword} onChange={(e) => setRestorePassword(e.target.value)} className="input-field font-mono text-sm" />
               <button onClick={() => fileInputRef.current?.click()} disabled={isProcessingRestore || !restorePassword}
-                className="w-full font-medium py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-white"
-                style={{ background: 'rgba(39,39,42,0.6)', border: '1px solid rgba(63,63,70,0.4)' }}
+                className="w-full font-medium py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-[var(--foreground)] bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] border border-[var(--card-border)]"
               >
                 {isProcessingRestore ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <><svg className="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>{t.settings.selectBackupFile}</>
+                  <><svg className="w-5 h-5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>{t.settings.selectBackupFile}</>
                 )}
               </button>
               <input type="file" accept="application/json" className="hidden" ref={fileInputRef} onChange={handleRestore} />
@@ -249,18 +243,16 @@ export default function SettingsPage() {
 
         {/* Danger Zone */}
         <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}
-          className="rounded-2xl p-6 sm:p-8 mt-4"
-          style={{ background: 'rgba(127,29,29,0.08)', border: '1px solid rgba(239,68,68,0.12)' }}
+          className="rounded-2xl p-6 sm:p-8 mt-4 bg-red-500/5 border border-red-500/10"
         >
-          <h2 className="text-lg font-semibold text-red-400 mb-1">{t.settings.dangerZone}</h2>
-          <p className="text-sm text-red-400/70 mb-5">{t.settings.dangerDesc}</p>
+          <h2 className="text-lg font-semibold text-red-500 dark:text-red-400 mb-1">{t.settings.dangerZone}</h2>
+          <p className="text-sm text-red-500 opacity-70 dark:text-red-400/70 mb-5">{t.settings.dangerDesc}</p>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl p-4 sm:p-5"
-            style={{ background: 'rgba(127,29,29,0.1)', border: '1px solid rgba(239,68,68,0.1)' }}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl p-4 sm:p-5 bg-red-500/5 border border-red-500/10"
           >
             <div>
-              <h3 className="text-zinc-200 font-medium">{t.settings.deleteAllFiles}</h3>
-              <p className="text-sm text-zinc-500 mt-0.5">{t.settings.deleteAllDesc}</p>
+              <h3 className="font-medium">{t.settings.deleteAllFiles}</h3>
+              <p className="text-sm text-[var(--muted)] mt-0.5">{t.settings.deleteAllDesc}</p>
             </div>
             <button onClick={handleDeleteAllFiles} disabled={isDeleting}
               className="px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-medium rounded-xl transition-all disabled:opacity-50 shrink-0 active:scale-[0.97]"

@@ -62,23 +62,23 @@ export function FileUploader() {
       <div onDragOver={(e) => { e.preventDefault(); setIsDragOver(true) }} onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop} onClick={() => !isUploading && inputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-xl p-8 sm:p-10 text-center cursor-pointer transition-all duration-300 ${
-          isDragOver ? 'border-brand-primary' : 'border-zinc-700/60 hover:border-zinc-500/60'
+          isDragOver ? 'border-brand-primary' : 'border-[var(--card-border)] opacity-60 hover:opacity-100 hover:border-[var(--foreground)]'
         } ${isUploading ? 'pointer-events-none opacity-70' : ''}`}
-        style={isDragOver ? { background: 'rgba(0,125,255,0.05)', boxShadow: 'inset 0 0 30px rgba(0,125,255,0.05)' } : {}}
+        style={isDragOver ? { background: 'var(--accent-glow)', boxShadow: 'inset 0 0 30px rgba(0,125,255,0.05)' } : {}}
       >
         <input ref={inputRef} type="file" className="hidden"
           onChange={(e) => { const file = e.target.files?.[0]; if (file) handleFile(file); e.target.value = '' }} />
         <div className="flex flex-col items-center gap-3">
           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${isDragOver ? 'animate-pulse scale-110' : ''}`}
-            style={{ background: isDragOver ? 'rgba(0,125,255,0.15)' : 'rgba(39,39,42,0.6)', border: `1px solid ${isDragOver ? 'rgba(0,125,255,0.3)' : 'rgba(63,63,70,0.4)'}` }}
+            style={{ background: isDragOver ? 'rgba(0,125,255,0.15)' : 'var(--glass-bg)', border: `1px solid ${isDragOver ? 'rgba(0,125,255,0.3)' : 'var(--card-border)'}` }}
           >
-            <svg className={`w-6 h-6 transition-colors duration-300 ${isDragOver ? 'text-brand-primary' : 'text-zinc-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className={`w-6 h-6 transition-colors duration-300 ${isDragOver ? 'text-brand-primary' : 'opacity-60'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
           </div>
           <div>
-            <p className="text-zinc-200 font-medium text-sm sm:text-base">{isDragOver ? t.uploader.dropHere : t.uploader.dragOrClick}</p>
-            <p className="text-zinc-500 text-xs sm:text-sm mt-1">{t.uploader.encrypted}</p>
+            <p className="font-medium text-sm sm:text-base">{isDragOver ? t.uploader.dropHere : t.uploader.dragOrClick}</p>
+            <p className="text-[var(--muted)] text-xs sm:text-sm mt-1">{t.uploader.encrypted}</p>
           </div>
         </div>
       </div>
@@ -87,19 +87,19 @@ export function FileUploader() {
         {selectedFile && stage === 'idle' && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl"
-              style={{ background: 'rgba(39,39,42,0.4)', border: '1px solid rgba(63,63,70,0.3)' }}
+              style={{ background: 'var(--glass-bg)', border: '1px solid var(--card-border)' }}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(63,63,70,0.5)' }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--btn-secondary-bg)' }}>
                   <span className="text-lg">📄</span>
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm text-zinc-200 font-medium truncate">{selectedFile.name}</p>
-                  <p className="text-xs text-zinc-500">{formatSize(selectedFile.size)} · {selectedFile.type || 'Unknown type'}</p>
+                  <p className="text-sm font-medium truncate">{selectedFile.name}</p>
+                  <p className="text-xs text-[var(--muted)]">{formatSize(selectedFile.size)} · {selectedFile.type || 'Unknown type'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <button onClick={(e) => { e.stopPropagation(); setSelectedFile(null) }} className="p-2 text-zinc-500 hover:text-zinc-300 transition-colors rounded-lg hover:bg-zinc-800/50">✕</button>
+                <button onClick={(e) => { e.stopPropagation(); setSelectedFile(null) }} className="p-2 text-[var(--muted)] hover:text-red-500 transition-colors rounded-lg hover:bg-[var(--glass-bg)]">✕</button>
                 <button onClick={(e) => { e.stopPropagation(); handleUpload() }} className="btn-primary text-sm !px-5 !py-2">{t.uploader.encryptUpload}</button>
               </div>
             </div>
@@ -110,12 +110,12 @@ export function FileUploader() {
       <AnimatePresence>
         {stage !== 'idle' && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-4">
-            <div className="p-3 rounded-xl" style={{ background: 'rgba(39,39,42,0.4)', border: '1px solid rgba(63,63,70,0.3)' }}>
+            <div className="p-3 rounded-xl" style={{ background: 'var(--glass-bg)', border: '1px solid var(--card-border)' }}>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-zinc-300 font-medium truncate me-2">{fileName}</span>
-                <span className={`text-xs font-medium ${stage === 'done' ? 'text-brand-primary' : stage === 'error' ? 'text-red-400' : 'text-zinc-400'}`}>{stageLabels[stage]}</span>
+                <span className="text-sm text-[var(--foreground)] opacity-90 font-medium truncate me-2">{fileName}</span>
+                <span className={`text-xs font-medium ${stage === 'done' ? 'text-brand-primary' : stage === 'error' ? 'text-red-400' : 'text-[var(--muted)]'}`}>{stageLabels[stage]}</span>
               </div>
-              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(63,63,70,0.5)' }}>
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--btn-secondary-bg)' }}>
                 <motion.div className="h-full rounded-full relative overflow-hidden"
                   style={{ background: stage === 'error' ? '#ef4444' : 'linear-gradient(90deg, var(--brand-primary), var(--brand-accent))' }}
                   initial={{ width: 0 }} animate={{ width: `${overallProgress}%` }} transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -127,8 +127,8 @@ export function FileUploader() {
               </div>
               {stage === 'error' && (
                 <div className="mt-2 flex items-center justify-between">
-                  <span className="text-xs text-red-400">{error}</span>
-                  <button onClick={() => { reset(); setSelectedFile(null) }} className="text-xs text-zinc-400 hover:text-zinc-200 underline">{t.uploader.tryAgain}</button>
+                  <span className="text-xs text-red-500 dark:text-red-400">{error}</span>
+                  <button onClick={() => { reset(); setSelectedFile(null) }} className="text-xs text-[var(--muted)] hover:text-[var(--foreground)] underline">{t.uploader.tryAgain}</button>
                 </div>
               )}
             </div>

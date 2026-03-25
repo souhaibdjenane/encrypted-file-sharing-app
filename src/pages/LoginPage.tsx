@@ -33,29 +33,29 @@ export function LoginPage() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-zinc-100">{t.auth.welcomeBack}</h1>
-          <p className="mt-2 text-zinc-400">{t.auth.signInSubtitle}</p>
+          <h1 className="text-3xl font-bold">{t.auth.welcomeBack}</h1>
+          <p className="mt-2 text-[var(--muted)]">{t.auth.signInSubtitle}</p>
         </div>
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {error && <div className="p-3 rounded-xl text-sm text-red-400" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)' }}>{error}</div>}
+            {error && <div className="p-3 rounded-xl text-sm text-red-500 dark:text-red-400 bg-red-500/5 border border-red-500/20">{error}</div>}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-2">{t.auth.email}</label>
+              <label htmlFor="email" className="block text-sm font-medium opacity-80 mb-2">{t.auth.email}</label>
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t.auth.emailPlaceholder} required className="input-field" />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-300 mb-2">{t.auth.password}</label>
+              <label htmlFor="password" className="block text-sm font-medium opacity-80 mb-2">{t.auth.password}</label>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t.auth.passwordPlaceholder} required className="input-field" />
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 !py-3">
               {loading ? (<><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />{t.auth.signingIn}</>) : t.auth.signIn}
             </button>
             <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-800/60"></div></div>
-              <div className="relative flex justify-center text-sm"><span className="px-3 text-zinc-500" style={{ background: 'rgba(24,24,27,0.6)' }}>{t.auth.orContinueWith}</span></div>
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--card-border)]"></div></div>
+              <div className="relative flex justify-center text-sm"><span className="px-3 text-[var(--muted)] bg-[var(--background)]">{t.auth.orContinueWith}</span></div>
             </div>
             <button type="button" onClick={handleGoogleLogin}
-              className="w-full bg-white hover:bg-zinc-100 text-zinc-950 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-zinc-200 hover:shadow-lg hover:shadow-white/5 active:scale-[0.98]"
+              className="w-full bg-[var(--foreground)] text-[var(--background)] font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-[var(--card-border)] hover:opacity-90 active:scale-[0.98]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -66,7 +66,7 @@ export function LoginPage() {
               Google
             </button>
           </form>
-          <p className="mt-6 text-center text-sm text-zinc-400">
+          <p className="mt-6 text-center text-sm text-[var(--muted)]">
             {t.auth.noAccount}{' '}<Link to="/register" className="text-brand-primary hover:text-brand-secondary font-medium transition-colors">{t.auth.createOne}</Link>
           </p>
         </div>

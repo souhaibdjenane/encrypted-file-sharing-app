@@ -31,24 +31,24 @@ export function DownloadButton({ fileId, wrappedKey, iv }: DownloadButtonProps) 
           background: stage === 'error'
             ? 'rgba(239,68,68,0.1)'
             : stage === 'done'
-            ? 'rgba(0,125,255,0.08)'
-            : 'rgba(39,39,42,0.6)',
+            ? 'var(--accent-glow)'
+            : 'var(--btn-secondary-bg)',
           border: `1px solid ${
             stage === 'error'
               ? 'rgba(239,68,68,0.3)'
               : stage === 'done'
               ? 'rgba(0,125,255,0.2)'
-              : 'rgba(63,63,70,0.4)'
+              : 'var(--card-border)'
           }`,
           color: stage === 'error'
-            ? '#fca5a5'
+            ? '#ef4444'
             : stage === 'done'
             ? 'var(--brand-primary)'
-            : '#d4d4d8',
+            : 'var(--foreground)',
         }}
       >
         {isWorking ? (
-          <div className="w-3 h-3 border-2 border-zinc-500 border-t-brand-primary rounded-full animate-spin" />
+          <div className="w-3 h-3 border-2 border-[var(--muted)] border-t-brand-primary rounded-full animate-spin" />
         ) : (
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

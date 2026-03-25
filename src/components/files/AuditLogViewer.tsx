@@ -45,7 +45,7 @@ export function AuditLogViewer({ isOpen, onClose, fileId, fileName }: AuditLogVi
       case 'revoke':
         return { label: 'Revoked Access', icon: 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636', color: 'text-red-400', bg: 'bg-red-400/10' }
       default:
-        return { label: action, icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-zinc-400', bg: 'bg-zinc-400/10' }
+        return { label: action, icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-[var(--muted)]', bg: 'bg-[var(--glass-bg)]' }
     }
   }
 
@@ -64,17 +64,17 @@ export function AuditLogViewer({ isOpen, onClose, fileId, fileName }: AuditLogVi
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            className="w-full max-w-lg bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
           >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between sticky top-0 bg-zinc-900 z-10">
+            <div className="px-6 py-4 border-b border-[var(--header-border)] flex items-center justify-between sticky top-0 bg-[var(--card-bg)] z-10">
               <div>
-                <h2 className="text-lg font-semibold text-zinc-100">Activity Log</h2>
-                <p className="text-sm text-zinc-500 truncate mt-0.5">{fileName}</p>
+                <h2 className="text-lg font-semibold">Activity Log</h2>
+                <p className="text-sm text-[var(--muted)] truncate mt-0.5">{fileName}</p>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+                className="p-2 text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--glass-bg)] rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -85,7 +85,7 @@ export function AuditLogViewer({ isOpen, onClose, fileId, fileName }: AuditLogVi
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar">
               {error && (
-                <div className="p-3 bg-red-900/20 border border-red-800/30 rounded-lg text-sm text-red-400 mb-4">
+                <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-lg text-sm text-red-500 dark:text-red-400 mb-4">
                   {error}
                 </div>
               )}
@@ -93,40 +93,40 @@ export function AuditLogViewer({ isOpen, onClose, fileId, fileName }: AuditLogVi
               <div className="space-y-6">
                 {isLoading ? (
                   <div className="flex justify-center py-8">
-                    <div className="w-6 h-6 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-6 h-6 border-2 border-[var(--muted)] border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : logs.length === 0 ? (
-                  <p className="text-sm text-zinc-500 text-center py-4 bg-zinc-800/20 rounded-xl border border-zinc-800 border-dashed">
+                  <p className="text-sm text-[var(--muted)] text-center py-4 bg-[var(--glass-bg)] rounded-xl border border-[var(--card-border)] border-dashed">
                     No activity recorded yet.
                   </p>
                 ) : (
-                  <div className="relative border-l-2 border-zinc-800 ml-3 pl-5 space-y-6 py-2">
+                  <div className="relative border-l-2 border-[var(--card-border)] ml-3 pl-5 space-y-6 py-2">
                     {logs.map((log) => {
                       const { label, icon, color, bg } = getActionInfo(log.action)
                       return (
                         <div key={log.id} className="relative">
                           {/* Timeline dot */}
-                          <div className={`absolute -left-[29px] w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-zinc-900 ${bg}`}>
+                          <div className={`absolute -left-[29px] w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-[var(--card-bg)] ${bg}`}>
                             <svg className={`w-3.5 h-3.5 ${color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
                             </svg>
                           </div>
                           
                           <div>
-                            <p className="text-sm font-medium text-zinc-200">
+                            <p className="text-sm font-medium">
                               {label}
                             </p>
-                            <p className="text-xs text-zinc-500 mt-1 mb-2">
+                            <p className="text-xs text-[var(--muted)] mt-1 mb-2">
                               {new Date(log.created_at).toLocaleString()}
                             </p>
                             
                             {/* Metadata Display */}
                             {log.metadata && Object.keys(log.metadata).length > 0 && (
-                              <div className="bg-zinc-950 rounded-lg p-3 text-xs text-zinc-400 font-mono flex flex-col gap-1 border border-zinc-800/50">
+                              <div className="bg-[var(--input-bg)] rounded-lg p-3 text-xs text-[var(--foreground)] opacity-70 font-mono flex flex-col gap-1 border border-[var(--card-border)]">
                                 {Object.entries(log.metadata).map(([key, value]) => (
                                   <div key={key} className="flex gap-2">
-                                    <span className="text-zinc-500">{key}:</span>
-                                    <span className="text-zinc-300 truncate">
+                                    <span className="opacity-60">{key}:</span>
+                                    <span className="truncate">
                                       {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                                     </span>
                                   </div>

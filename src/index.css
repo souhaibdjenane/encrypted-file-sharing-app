@@ -12,7 +12,41 @@
   --brand-primary: #007DFF;
   --brand-secondary: #019EEC;
   --brand-accent: #02B7DF;
+  /* Dark Theme (Default) */
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card-bg: rgba(24, 24, 27, 0.6);
+  --card-border: rgba(63, 63, 70, 0.4);
+  --input-bg: rgba(24, 24, 27, 0.6);
+  --input-border: rgba(63, 63, 70, 0.5);
+  --btn-secondary-bg: rgba(39, 39, 42, 0.5);
+  --btn-secondary-hover: rgba(63, 63, 70, 0.5);
+  --muted: #a1a1aa;
+  --text-dim: #71717a;
   --brand-font: 'Sansation', 'Inter', sans-serif;
+  --header-glass: rgba(24, 24, 27, 0.5);
+  --header-border: rgba(63, 63, 70, 0.3);
+  --glass-bg: rgba(24, 24, 27, 0.4);
+  --glass-border: rgba(63, 63, 70, 0.2);
+  --accent-glow: rgba(0, 125, 255, 0.15);
+}
+
+[data-theme='light'] {
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card-bg: rgba(244, 244, 245, 0.7);
+  --card-border: #e4e4e7;
+  --input-bg: #ffffff;
+  --input-border: #e4e4e7;
+  --btn-secondary-bg: #f4f4f5;
+  --btn-secondary-hover: #e4e4e7;
+  --muted: #71717a;
+  --text-dim: #a1a1aa;
+  --header-glass: rgba(255, 255, 255, 0.7);
+  --header-border: rgba(228, 228, 231, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(228, 228, 231, 0.4);
+  --accent-glow: rgba(0, 125, 255, 0.05);
 }
 
 @tailwind base;
@@ -27,17 +61,20 @@
   }
 
   body {
-    @apply bg-zinc-950 text-zinc-100 antialiased font-sans;
+    @apply antialiased font-sans;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--brand-font) !important;
     min-height: 100vh;
     background-image:
-      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+      radial-gradient(circle at 1px 1px, rgba(125, 125, 125, 0.03) 1px, transparent 0);
     background-size: 32px 32px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   ::selection {
     background-color: color-mix(in srgb, var(--brand-primary), transparent 70%);
-    color: white;
+    color: var(--foreground);
   }
 
   ::-webkit-scrollbar {
@@ -49,11 +86,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-zinc-700/50 rounded-full;
+    @apply rounded-full;
+    background-color: var(--card-border);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-zinc-600;
+    background-color: var(--muted);
   }
 }
 
@@ -75,25 +113,28 @@
   }
 
   .btn-secondary {
-    @apply px-6 py-3 text-zinc-100 font-semibold rounded-xl
-           border border-zinc-700/50 hover:border-zinc-600
-           transition-all duration-300 ease-out active:scale-[0.97];
-    background: rgba(39, 39, 42, 0.5);
+    @apply px-6 py-3 font-semibold rounded-xl
+           border transition-all duration-300 ease-out active:scale-[0.97];
+    border-color: var(--card-border);
+    background: var(--btn-secondary-bg);
+    color: var(--foreground);
     backdrop-filter: blur(12px);
   }
 
   .btn-secondary:hover {
-    background: rgba(63, 63, 70, 0.5);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: var(--btn-secondary-hover);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl text-zinc-100
-           placeholder:text-zinc-500 focus:outline-none
+    @apply w-full px-4 py-3 rounded-xl
+           focus:outline-none
            transition-all duration-300;
-    background: rgba(24, 24, 27, 0.6);
-    border: 1px solid rgba(63, 63, 70, 0.5);
+    --placeholder-color: var(--muted);
+    background: var(--input-bg);
+    color: var(--foreground);
+    border: 1px solid var(--input-border);
     backdrop-filter: blur(8px);
   }
 
@@ -106,21 +147,22 @@
 
   .card {
     @apply rounded-2xl p-6 transition-all duration-300;
-    background: rgba(24, 24, 27, 0.6);
-    border: 1px solid rgba(63, 63, 70, 0.4);
+    background: var(--card-bg);
+    color: var(--foreground);
+    border: 1px solid var(--card-border);
     backdrop-filter: blur(16px);
   }
 
   .card:hover {
-    border-color: rgba(82, 82, 91, 0.6);
+    border-color: var(--brand-primary);
     box-shadow:
-      0 0 30px rgba(0, 0, 0, 0.3),
+      0 0 30px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.03);
   }
 
   .glass {
-    background: rgba(24, 24, 27, 0.5);
-    border: 1px solid rgba(63, 63, 70, 0.3);
+    background: var(--header-glass);
+    border: 1px solid var(--header-border);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }

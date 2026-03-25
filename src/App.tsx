@@ -12,6 +12,28 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import PublicSharePage from '@/pages/PublicSharePage'
 import SettingsPage from '@/pages/SettingsPage'
+import { useTheme, type Theme } from '@/hooks/useTheme'
+import { createContext, useContext, type ReactNode } from 'react'
+
+const ThemeContext = createContext<{
+  theme: Theme
+  toggleTheme: () => void
+} | undefined>(undefined)
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const themeProps = useTheme()
+  return (
+    <ThemeContext.Provider value={themeProps}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+export const useThemeContext = () => {
+  const context = useContext(ThemeContext)
+  if (!context) throw new Error('useThemeContext must be used within ThemeProvider')
+  return context
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,11 +80,13 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <I18nProvider>
-          <CryptoProvider>
-            <ToastProvider>
-              <AppRoutes />
-            </ToastProvider>
-          </CryptoProvider>
+          <ThemeProvider>
+            <CryptoProvider>
+              <ToastProvider>
+                <AppRoutes />
+              </ToastProvider>
+            </CryptoProvider>
+          </ThemeProvider>
         </I18nProvider>
       </BrowserRouter>
     </QueryClientProvider>
