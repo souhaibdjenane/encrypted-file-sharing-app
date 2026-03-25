@@ -7,7 +7,9 @@ import { decryptFile, decryptMetadata } from '@/crypto/decrypt'
 function getHashParam(key: string) {
   const hash = window.location.hash.substring(1)
   const params = new URLSearchParams(hash)
-  return params.get(key)
+  const value = params.get(key)
+  // URLSearchParams automatically decodes the value, so we get the original base64
+  return value
 }
 
 export default function PublicSharePage() {

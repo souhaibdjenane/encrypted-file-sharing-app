@@ -70,7 +70,9 @@ export function useShares(fileId: string) {
 
       if (isPublic) {
         const exportedRawKey = await exportRawKeyBase64(rawFileKey)
-        const publicUrl = `${window.location.origin}/s/${share.token}#key=${exportedRawKey}`
+        // URL-encode the base64 key to safely embed it in the hash
+        const encodedKey = encodeURIComponent(exportedRawKey)
+        const publicUrl = `${window.location.origin}/s/${share.token}#key=${encodedKey}`
         await loadShares()
         return { share, publicUrl }
       }
