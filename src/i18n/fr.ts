@@ -10,6 +10,11 @@ export const fr: TranslationKeys = {
     logIn: 'Connexion',
     signUp: "S'inscrire",
     logOut: 'Déconnexion',
+    languages: {
+      en: 'Anglais',
+      fr: 'Français',
+      ar: 'Arabe',
+    },
   },
 
   landing: {
@@ -116,19 +121,28 @@ export const fr: TranslationKeys = {
     languageDesc: "Choisissez votre langue d'affichage préférée.",
   },
 
+  // Share Modal
   share: {
+    title: 'Partager le fichier',
     publicLink: 'Lien Public',
-    publicLinkDesc: 'Toute personne disposant du lien peut télécharger ce fichier.',
-    generateLink: 'Générer un Lien Public',
-    generatingLink: 'Génération...',
-    copyLink: 'Copier',
+    publicLinkDesc: 'Toute personne disposant du lien peut déchiffrer et télécharger ce fichier directement dans son navigateur.',
+    generateLink: 'Générer et Copier le Lien',
+    copy: 'Copier',
+    copied: 'Copié !',
+    yourLink: 'Votre Lien Unique',
     expiration: 'Expiration (Facultatif)',
     activeLinks: 'Liens Publics Actifs',
     noLinks: 'Aucun lien public généré.',
+    linkGenerated: 'Lien public copié dans le presse-papiers !',
+    linkGeneratedManual: 'Lien généré ! Vous pouvez le copier manuellement.',
     canDownload: 'Téléchargement autorisé',
     viewOnly: 'Lecture seule',
     revoke: 'Révoquer',
     revoked: 'Révoqué',
+    expiresPrefix: 'Expire le',
+    accessRevoked: 'Accès révoqué',
+    revokeFailed: 'Échec de la révocation',
+    generateFailed: 'Échec de la création du lien',
   },
 
   publicShare: {

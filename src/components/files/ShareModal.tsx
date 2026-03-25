@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useShares } from '@/hooks/useShares'
 import { useToast } from '@/components/ui/Toast'
 import { createPortal } from 'react-dom'
+import { useTranslation } from '@/i18n'
 
 interface ShareModalProps {
   isOpen: boolean
@@ -14,6 +15,7 @@ interface ShareModalProps {
 export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProps) {
   const { shares, isLoading, error, loadShares, shareFile, revokeShare } = useShares(fileId)
   const { toast } = useToast()
+  const { t } = useTranslation()
 
   const canDownload = true
   const canReshare = false
@@ -30,9 +32,9 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
   const handleRevoke = async (shareId: string) => {
     try {
       await revokeShare(shareId)
-      toast('Access revoked', 'success')
+      toast(t.share.accessRevoked, 'success')
     } catch (err: any) {
-      toast(err.message || 'Failed to revoke access', 'error')
+      toast(err.message || t.share.revokeFailed, 'error')
     }
   }
 
@@ -49,16 +51,16 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(result.publicUrl as string)
-            toast('Public link copied to clipboard!', 'success')
+            toast(t.share.linkGenerated, 'success')
           }
         } catch (e) {
           console.warn('Clipboard write failed, but link is displayed', e)
-          toast('Link generated! You can copy it manually.', 'success')
+          toast(t.share.linkGeneratedManual, 'success')
         }
       }
     } catch (err: any) {
       console.error('Public link creation failed:', err)
-      toast(err.message || 'Failed to create public link', 'error')
+      toast(err.message || t.share.generateFailed, 'error')
     }
   }
 
@@ -83,7 +85,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
               {/* Header */}
               <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between sticky top-0 bg-zinc-900 z-10">
                 <div>
-                  <h2 className="text-lg font-semibold text-zinc-100">Share File</h2>
+                  <h2 className="text-lg font-semibold text-zinc-100">{t.share.title}</h2>
                   <p className="text-sm text-zinc-500 truncate mt-0.5">{fileName}</p>
                 </div>
                 <button
@@ -103,9 +105,9 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                 <div className="mb-6 p-5 rounded-xl border border-brand-primary/40 bg-brand-primary/5 hover:border-brand-primary/30 transition-colors">
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
-                      <h3 className="text-sm font-semibold text-brand-primary">Public Link Access</h3>
+                      <h3 className="text-sm font-semibold text-brand-primary">{t.share.publicLink}</h3>
                       <p className="text-xs text-brand-primary/70 mt-1 leading-relaxed max-w-[280px]">
-                        Anyone with the link can decrypt and download this file directly in their browser.
+                        {t.share.publicLinkDesc}
                       </p>
                     </div>
                     <div className="h-8 w-8 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
@@ -123,7 +125,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                     </svg>
-                    Generate & Copy Link
+                    {t.share.generateLink}
                   </button>
 
                   <AnimatePresence>
@@ -134,7 +136,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         className="overflow-hidden"
                       >
-                        <label className="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Your Unique Link</label>
+                        <label className="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">{t.share.yourLink}</label>
                         <div className="flex bg-zinc-950 border border-brand-primary/30 rounded-xl overflow-hidden shadow-inner ring-1 ring-brand-primary/10">
                           <input
                             type="text"
@@ -146,11 +148,11 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                           <button
                             onClick={() => {
                               navigator.clipboard.writeText(generatedLink)
-                              toast('Copied!', 'success')
+                              toast(t.share.copied, 'success')
                             }}
                             className="px-4 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary text-xs font-medium border-l border-brand-primary/30 transition-colors"
                           >
-                            Copy
+                            {t.share.copy}
                           </button>
                         </div>
                       </motion.div>
@@ -161,7 +163,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                 {/* Settings for Public Link */}
                 <div className="space-y-4 mb-8">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-1.5">Expiration (Optional)</label>
+                    <label className="block text-sm font-medium text-zinc-300 mb-1.5">{t.share.expiration}</label>
                     <input
                       type="datetime-local"
                       value={expiresAt}
@@ -174,7 +176,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                 {/* Existing Shares */}
                 <div>
                   <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    Active Public Links
+                    {t.share.activeLinks}
                     {isLoading && <div className="w-3 h-3 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />}
                   </h3>
                   
@@ -187,7 +189,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                   <div className="space-y-3">
                     {shares.length === 0 && !isLoading && !error ? (
                       <p className="text-sm text-zinc-500 text-center py-4 bg-zinc-800/20 rounded-xl border border-zinc-800 border-dashed">
-                        No public links generated yet.
+                        {t.share.noLinks}
                       </p>
                     ) : (
                       shares.map((share) => (
@@ -200,24 +202,24 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                               <svg className="w-3.5 h-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                               </svg>
-                              Public Link
+                              {t.share.publicLink}
                             </p>
                             <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
                               <span className={share.can_download ? 'text-brand-primary/80' : 'text-zinc-500'}>
-                                {share.can_download ? 'Can Download' : 'View Only'}
+                                {share.can_download ? t.share.canDownload : t.share.viewOnly}
                               </span>
                               {share.expires_at && (
                                 <>
                                   <span>·</span>
                                   <span className="text-amber-400/80">
-                                    Expires {new Date(share.expires_at).toLocaleDateString()}
+                                    {t.share.expiresPrefix} {new Date(share.expires_at).toLocaleDateString()}
                                   </span>
                                 </>
                               )}
                               {share.revoked && (
                                 <>
                                   <span>·</span>
-                                  <span className="text-red-400">Revoked</span>
+                                  <span className="text-red-400">{t.share.revoked}</span>
                                 </>
                               )}
                             </div>
@@ -228,7 +230,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                                 onClick={() => handleRevoke(share.id)}
                                 className="px-3 py-1.5 text-xs font-medium text-red-400 hover:text-red-300 bg-red-900/20 hover:bg-red-900/40 rounded-lg border border-red-800/30 transition-colors flex-shrink-0"
                               >
-                                Revoke
+                                {t.share.revoke}
                               </button>
                             </div>
                           )}

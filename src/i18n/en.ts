@@ -10,6 +10,11 @@ export const en = {
     logIn: 'Log in',
     signUp: 'Sign up',
     logOut: 'Log out',
+    languages: {
+      en: 'English',
+      fr: 'French',
+      ar: 'Arabic',
+    },
   },
 
   // Landing
@@ -125,18 +130,26 @@ export const en = {
 
   // Share Modal
   share: {
+    title: 'Share File',
     publicLink: 'Public Link Access',
-    publicLinkDesc: 'Anyone with the link can download this file.',
-    generateLink: 'Generate Public Link',
-    generatingLink: 'Generating...',
-    copyLink: 'Copy',
+    publicLinkDesc: 'Anyone with the link can decrypt and download this file directly in their browser.',
+    generateLink: 'Generate & Copy Link',
+    copy: 'Copy',
+    copied: 'Copied!',
+    yourLink: 'Your Unique Link',
     expiration: 'Expiration (Optional)',
     activeLinks: 'Active Public Links',
     noLinks: 'No public links generated yet.',
+    linkGenerated: 'Public link copied to clipboard!',
+    linkGeneratedManual: 'Link generated! You can copy it manually.',
     canDownload: 'Can Download',
     viewOnly: 'View Only',
     revoke: 'Revoke',
     revoked: 'Revoked',
+    expiresPrefix: 'Expires',
+    accessRevoked: 'Access revoked',
+    revokeFailed: 'Failed to revoke access',
+    generateFailed: 'Failed to create public link',
   },
 
   // Public Share Page

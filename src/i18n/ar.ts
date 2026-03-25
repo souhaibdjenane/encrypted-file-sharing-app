@@ -10,6 +10,11 @@ export const ar: TranslationKeys = {
     logIn: 'تسجيل الدخول',
     signUp: 'إنشاء حساب',
     logOut: 'تسجيل الخروج',
+    languages: {
+      en: 'الإنجليزية',
+      fr: 'الفرنسية',
+      ar: 'العربية',
+    },
   },
 
   landing: {
@@ -66,7 +71,7 @@ export const ar: TranslationKeys = {
     encryptUpload: 'تشفير ورفع',
     encrypting: '...جاري التشفير',
     uploading: '...جاري الرفع',
-    saving: '...جاري الحفظ',
+    saving: '...جاري الحظ',
     done: '✓ تم',
     failed: 'فشل',
     tryAgain: 'حاول مرة أخرى',
@@ -117,18 +122,26 @@ export const ar: TranslationKeys = {
   },
 
   share: {
+    title: 'مشاركة الملف',
     publicLink: 'رابط عام',
-    publicLinkDesc: 'يمكن لأي شخص لديه الرابط تحميل هذا الملف.',
-    generateLink: 'إنشاء رابط عام',
-    generatingLink: '...جاري الإنشاء',
-    copyLink: 'نسخ',
+    publicLinkDesc: 'يمكن لأي شخص لديه الرابط فك تشفير وتنزيل هذا الملف مباشرة في متصفحه.',
+    generateLink: 'إنشاء ونسخ الرابط',
+    copy: 'نسخ',
+    copied: 'تم النسخ!',
+    yourLink: 'رابطك الفريد',
     expiration: '(اختياري) انتهاء الصلاحية',
     activeLinks: 'الروابط العامة النشطة',
-    noLinks: 'لم يتم إنشاء روابط عامة بعد.',
+    noLinks: 'لم يتم إنشاء الروابط العامة بعد.',
+    linkGenerated: 'تم نسخ الرابط العام!',
+    linkGeneratedManual: 'تم إنشاء الرابط! يمكنك نسخه يدوياً.',
     canDownload: 'يمكن التحميل',
     viewOnly: 'عرض فقط',
     revoke: 'إلغاء',
     revoked: 'ملغى',
+    expiresPrefix: 'ينتهي في',
+    accessRevoked: 'تم إلغاء الوصول',
+    revokeFailed: 'فشل إلغاء الوصول',
+    generateFailed: 'فشل إنشاء الرابط',
   },
 
   publicShare: {

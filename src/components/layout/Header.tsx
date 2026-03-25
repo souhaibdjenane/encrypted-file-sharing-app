@@ -108,7 +108,7 @@ export function Header() {
                         }`}
                       >
                         <span className="font-bold me-2 opacity-50 text-[10px]">{locales[code].shortName}</span>
-                        {locales[code].nativeName}
+                        {(t.nav.languages as any)[code]}
                       </button>
                     ))}
                   </motion.div>
