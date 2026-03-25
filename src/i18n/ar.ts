@@ -16,7 +16,7 @@ export const ar: TranslationKeys = {
     badge: 'تشفير من طرف إلى طرف',
     heroTitle1: 'شارك الملفات مع ',
     heroTitle2: 'خصوصية بدون معرفة',
-    heroDescription: 'يتم تشفير ملفاتك قبل مغادرة جهازك. أنت والمستلمون فقط من يملكون المفاتيح — حتى VaultShare لا يمكنه قراءة بياناتك.',
+    heroDescription: 'يتم تشفير ملفاتك قبل مغادرة جهازك. أنت والمستلمون فقط من يملكون المفاتيح. حتى VaultShare لا يمكنه قراءة بياناتك.',
     getStarted: 'ابدأ مجاناً',
     goToDashboard: '← الذهاب للوحة التحكم',
     feature1Title: 'تشفير من جانب العميل',

@@ -16,7 +16,7 @@ export const fr: TranslationKeys = {
     badge: 'Chiffrement de bout en bout',
     heroTitle1: 'Partagez des fichiers avec ',
     heroTitle2: 'une confidentialité totale',
-    heroDescription: "Vos fichiers sont chiffrés avant de quitter votre appareil. Seuls vous et vos destinataires détenez les clés — même VaultShare ne peut pas lire vos données.",
+    heroDescription: "Vos fichiers sont chiffrés avant de quitter votre appareil. Seuls vous et vos destinataires détenez les clés. Même VaultShare ne peut pas lire vos données.",
     getStarted: 'Commencer Gratuitement',
     goToDashboard: 'Aller au Tableau de Bord →',
     feature1Title: 'Chiffrement Côté Client',

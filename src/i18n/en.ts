@@ -2,7 +2,7 @@ export const en = {
   // Common
   appName: 'VaultShare',
   loading: 'Loading...',
-  
+
   // Header / Nav
   nav: {
     myFiles: 'My Files',
@@ -17,7 +17,7 @@ export const en = {
     badge: 'End-to-end encrypted',
     heroTitle1: 'Share files with ',
     heroTitle2: 'zero-knowledge privacy',
-    heroDescription: 'Your files are encrypted before they leave your device. Only you and your recipients hold the keys — not even VaultShare can read your data.',
+    heroDescription: 'Your files are encrypted before they leave your device. Only you and your recipients hold the keys. Not even VaultShare can read your data.',
     getStarted: 'Get Started Free',
     goToDashboard: 'Go to Dashboard →',
     feature1Title: 'Client-Side Encryption',

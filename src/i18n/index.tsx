@@ -9,14 +9,15 @@ export interface LocaleInfo {
   code: Locale
   name: string
   nativeName: string
+  shortName: string
   dir: 'ltr' | 'rtl'
   font: string
 }
 
 export const locales: Record<Locale, LocaleInfo> = {
-  en: { code: 'en', name: 'English', nativeName: 'English', dir: 'ltr', font: "'Sansation', 'Inter', sans-serif" },
-  fr: { code: 'fr', name: 'French', nativeName: 'Français', dir: 'ltr', font: "'Sansation', 'Inter', sans-serif" },
-  ar: { code: 'ar', name: 'Arabic', nativeName: 'العربية', dir: 'rtl', font: "'Alyamama', 'Cairo', sans-serif" },
+  en: { code: 'en', name: 'English', nativeName: 'English', shortName: 'EN', dir: 'ltr', font: "'Sansation', 'Inter', sans-serif" },
+  fr: { code: 'fr', name: 'French', nativeName: 'Français', shortName: 'FR', dir: 'ltr', font: "'Sansation', 'Inter', sans-serif" },
+  ar: { code: 'ar', name: 'Arabic', nativeName: 'العربية', shortName: 'AR', dir: 'rtl', font: "'Alyamama', 'Cairo', sans-serif" },
 }
 
 const translations: Record<Locale, TranslationKeys> = { en, fr, ar }
