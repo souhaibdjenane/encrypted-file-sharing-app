@@ -103,7 +103,7 @@ export function DashboardPage() {
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(0,125,255,0.4), transparent)' }} />
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[var(--card-border)] bg-[var(--glass-bg)]"
-            style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+            style={{ fontSize: 8, fontWeight: 400, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)' }}>
             <svg className="w-3 h-3 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
             </svg>
