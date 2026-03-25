@@ -15,8 +15,8 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
   const { shares, isLoading, error, loadShares, shareFile, revokeShare } = useShares(fileId)
   const { toast } = useToast()
 
-  const [canDownload, setCanDownload] = useState(true)
-  const [canReshare, setCanReshare] = useState(false)
+  const canDownload = true
+  const canReshare = false
   const [expiresAt, setExpiresAt] = useState('')
   const [generatedLink, setGeneratedLink] = useState<string | null>(null)
 
@@ -159,36 +159,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                 </div>
 
                 {/* Settings for Public Link */}
-                <div className="space-y-4 mb-8 p-4 rounded-xl border border-zinc-800/40 bg-zinc-800/10">
-                  <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Public Link Permissions</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <label className="flex items-center gap-3 p-3 rounded-xl border border-zinc-800/60 bg-zinc-800/20 cursor-pointer hover:bg-zinc-800/40 transition-colors">
-                      <div className="relative flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={canDownload}
-                          onChange={(e) => setCanDownload(e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-9 h-5 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                      </div>
-                      <span className="text-sm font-medium text-zinc-300">Allow Download</span>
-                    </label>
-
-                    <label className="flex items-center gap-3 p-3 rounded-xl border border-zinc-800/60 bg-zinc-800/20 cursor-pointer hover:bg-zinc-800/40 transition-colors">
-                      <div className="relative flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={canReshare}
-                          onChange={(e) => setCanReshare(e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-9 h-5 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                      </div>
-                      <span className="text-sm font-medium text-zinc-300">Allow Re-share</span>
-                    </label>
-                  </div>
-
+                <div className="space-y-4 mb-8">
                   <div>
                     <label className="block text-sm font-medium text-zinc-300 mb-1.5">Expiration (Optional)</label>
                     <input
