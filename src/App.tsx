@@ -9,7 +9,6 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { DashboardPage } from '@/pages/DashboardPage'
-import SharedPage from '@/pages/SharedPage'
 import PublicSharePage from '@/pages/PublicSharePage'
 import SettingsPage from '@/pages/SettingsPage'
 
@@ -37,14 +36,6 @@ function AppRoutes() {
           element={
             <AuthGuard>
               <DashboardPage />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/shared"
-          element={
-            <AuthGuard>
-              <SharedPage />
             </AuthGuard>
           }
         />

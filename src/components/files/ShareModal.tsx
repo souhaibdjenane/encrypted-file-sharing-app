@@ -15,7 +15,6 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
   const { shares, isLoading, error, loadShares, shareFile, revokeShare } = useShares(fileId)
   const { toast } = useToast()
 
-  const [email, setEmail] = useState('')
   const [canDownload, setCanDownload] = useState(true)
   const [canReshare, setCanReshare] = useState(false)
   const [expiresAt, setExpiresAt] = useState('')
@@ -27,23 +26,6 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
     }
   }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleShare = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    try {
-      await shareFile({
-        email,
-        canDownload,
-        canReshare,
-        expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
-      })
-      toast(`Shared with ${email}`, 'success')
-      setEmail('')
-      setExpiresAt('')
-    } catch (err: any) {
-      toast(err.message || 'Failed to share file', 'error')
-    }
-  }
 
   const handleRevoke = async (shareId: string) => {
     try {
@@ -57,7 +39,6 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
   const handleCreatePublicLink = async () => {
     try {
       const result = await shareFile({
-        isPublic: true,
         canDownload,
         canReshare,
         expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
@@ -177,26 +158,9 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                   </AnimatePresence>
                 </div>
 
-                <div className="relative flex items-center mb-6">
-                  <div className="flex-grow border-t border-zinc-800"></div>
-                  <span className="flex-shrink-0 mx-4 text-xs font-medium text-zinc-500 uppercase tracking-wider">Or Share Privately</span>
-                  <div className="flex-grow border-t border-zinc-800"></div>
-                </div>
-
-                {/* Share Form */}
-                <form onSubmit={handleShare} className="space-y-4 mb-8">
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-1.5">Recipient Email</label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="user@example.com"
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono text-sm"
-                    />
-                  </div>
-
+                {/* Settings for Public Link */}
+                <div className="space-y-4 mb-8 p-4 rounded-xl border border-zinc-800/40 bg-zinc-800/10">
+                  <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Public Link Permissions</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <label className="flex items-center gap-3 p-3 rounded-xl border border-zinc-800/60 bg-zinc-800/20 cursor-pointer hover:bg-zinc-800/40 transition-colors">
                       <div className="relative flex items-center">
@@ -234,29 +198,12 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono text-sm [color-scheme:dark]"
                     />
                   </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoading || !email}
-                    className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold py-2.5 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mt-4"
-                  >
-                    {isLoading ? (
-                      <div className="w-5 h-5 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                        Share File
-                      </>
-                    )}
-                  </button>
-                </form>
+                </div>
 
                 {/* Existing Shares */}
                 <div>
                   <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    Active Shares
+                    Active Public Links
                     {isLoading && <div className="w-3 h-3 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />}
                   </h3>
                   
@@ -269,7 +216,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                   <div className="space-y-3">
                     {shares.length === 0 && !isLoading && !error ? (
                       <p className="text-sm text-zinc-500 text-center py-4 bg-zinc-800/20 rounded-xl border border-zinc-800 border-dashed">
-                        This file hasn't been shared yet.
+                        No public links generated yet.
                       </p>
                     ) : (
                       shares.map((share) => (
@@ -279,12 +226,10 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                         >
                           <div className="min-w-0 pr-3">
                             <p className="text-sm font-medium text-zinc-200 truncate flex items-center gap-1.5">
-                              {share.recipient_email === 'Public Link' ? (
-                                <svg className="w-3.5 h-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                </svg>
-                              ) : null}
-                              {share.recipient_email}
+                              <svg className="w-3.5 h-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                              </svg>
+                              Public Link
                             </p>
                             <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
                               <span className={share.can_download ? 'text-emerald-400/80' : 'text-zinc-500'}>
@@ -308,20 +253,6 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                           </div>
                           {!share.revoked && (
                             <div className="flex items-center gap-2">
-                              {share.recipient_email === 'Public Link' && !share.revoked && (
-                                <button
-                                  onClick={async () => {
-                                    // Normally we don't store the raw key in shares table (it's in the hash).
-                                    // If they click copy link again, it's easier to just recreate the token or 
-                                    // expect them to recreate it because the server doesn't have the AES key!
-                                    // We will just show a toast instructing them.
-                                    toast('Cannot copy original link. Please generate a new one.', 'error')
-                                  }}
-                                  className="px-2.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white bg-zinc-800/40 hover:bg-zinc-700/60 rounded-lg border border-zinc-700/50 transition-colors flex-shrink-0"
-                                >
-                                  Copy
-                                </button>
-                              )}
                               <button
                                 onClick={() => handleRevoke(share.id)}
                                 className="px-3 py-1.5 text-xs font-medium text-red-400 hover:text-red-300 bg-red-900/20 hover:bg-red-900/40 rounded-lg border border-red-800/30 transition-colors flex-shrink-0"

@@ -169,9 +169,6 @@ export async function deleteFile(fileId: string, storagePath: string): Promise<v
 export interface ShareRecord {
   id: string
   file_id: string
-  shared_by: string
-  shared_with: string | null
-  recipient_email: string | null
   token: string
   can_download: boolean
   can_reshare: boolean
@@ -229,26 +226,6 @@ export async function createShareRecord(params: {
   return res.json()
 }
 
-/**
- * Save a newly re-encrypted file key for a recipient.
- * Uses upsert to handle re-sharing after revocation (same user may get a new wrapped key).
- */
-export async function saveSharedFileKey(params: {
-  fileId: string
-  recipientId: string
-  wrappedKey: string
-}): Promise<void> {
-  const { error } = await supabase.from('file_keys').upsert(
-    {
-      file_id: params.fileId,
-      user_id: params.recipientId,
-      wrapped_key: params.wrappedKey,
-    },
-    { onConflict: 'file_id,user_id' }
-  )
-
-  if (error) throw new Error(`Failed to save shared file key: ${error.message}`)
-}
 
 /**
  * Call the edge function to revoke access to a share.
@@ -267,34 +244,6 @@ export async function revokeAccess(shareId: string): Promise<void> {
   }
 }
 
-/**
- * Fetch all files that have been shared with the current user.
- */
-export async function fetchSharedWithMe() {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
-
-  // We fetch files by inner joining `shares` where shared_with = auth.uid()
-  // and we ALSO fetch `file_keys` where user_id = auth.uid() to get our wrapped key for decryption.
-  const { data, error } = await supabase
-    .from('files')
-    .select('*, shares!inner(*), file_keys!inner(wrapped_key)')
-    .eq('shares.shared_with', user.id)
-    .eq('shares.revoked', false)
-    .order('created_at', { ascending: false })
-
-  if (error) throw new Error(`Failed to fetch shared files: ${error.message}`)
-
-  // For shared files, there may be multiple shares (e.g., if re-shared).
-  // The query returns them grouped by file. PostgREST returns `shares` and `file_keys` as arrays for the 1:N relations.
-  // We normalize the response to match the shape expected by FileCard (a single wrappedKey).
-  return data.map((item: any) => ({
-    ...item,
-    // The inner join ensures file_keys has at least 1 item (the one for the current user)
-    // because `file_keys.user_id = auth.uid()` is enforced by RLS.
-    file_keys: item.file_keys,
-  }))
-}
 
 export interface AuditLog {
   id: string

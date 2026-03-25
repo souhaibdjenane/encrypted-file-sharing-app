@@ -47,16 +47,6 @@ export function Header() {
                 My Files
               </Link>
               <Link
-                to="/shared"
-                className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                  location.pathname === '/shared'
-                    ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700/50'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-                }`}
-              >
-                Shared
-              </Link>
-              <Link
                 to="/settings"
                 className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                   location.pathname === '/settings'

@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { fetchFileShares, createShareRecord, revokeAccess, getAuthHeaders, type ShareRecord } from '@/api/filesApi'
+import { fetchFileShares, createShareRecord, revokeAccess, type ShareRecord } from '@/api/filesApi'
 import { useCrypto } from '@/crypto/CryptoProvider'
-import { unwrapFileKey, wrapFileKey } from '@/crypto/keyWrap'
-import { importPublicKey, exportRawKeyBase64 } from '@/crypto/keys'
+import { unwrapFileKey } from '@/crypto/keyWrap'
+import { exportRawKeyBase64 } from '@/crypto/keys'
 
-const FUNCTIONS_URL = '/api'
 
 export function useShares(fileId: string) {
   const [shares, setShares] = useState<ShareRecord[]>([])
@@ -27,14 +26,10 @@ export function useShares(fileId: string) {
   }
 
   const shareFile = async ({
-    email,
-    isPublic,
     canDownload = true,
     canReshare = false,
     expiresAt,
   }: {
-    email?: string
-    isPublic?: boolean
     canDownload?: boolean
     canReshare?: boolean
     expiresAt?: string
@@ -60,68 +55,25 @@ export function useShares(fileId: string) {
       // 2. Unwrap the file key
       const rawFileKey = await unwrapFileKey(fileKeys.wrapped_key, keyPair.privateKey)
 
-      // 3. For private shares, get recipient's public key first
-      let wrappedForRecipient: string | undefined = undefined
-      if (!isPublic && email) {
-        // Call edge function to get recipient details (public key, validate ownership)
-        const headers = await getAuthHeaders()
-        const preRes = await fetch(`${FUNCTIONS_URL}/share-file`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            fileId,
-            recipientEmail: email,
-            isPublic: false,
-            canDownload,
-            canReshare,
-            expiresAt,
-            // wrappedKey omitted on first call - just to get public key
-          }),
-        })
-
-        if (!preRes.ok) {
-          const err = await preRes.json().catch(() => ({ error: 'Share creation failed' }))
-          throw new Error(err.error || `Share creation failed (${preRes.status})`)
-        }
-
-        const preData = await preRes.json()
-        const { recipientPublicKey } = preData
-
-        if (!recipientPublicKey) throw new Error('Failed to get recipient public key')
-
-        // Wrap the key with recipient's public key
-        const recipientCryptoKey = await importPublicKey(recipientPublicKey)
-        wrappedForRecipient = await wrapFileKey(rawFileKey, recipientCryptoKey)
-      }
-
-      // 4. Create share record with wrapped key (or public link without key)
-      const { share, recipientPublicKey } = await createShareRecord({
+      // 3. Create public share record (private sharing removed)
+      const { share } = await createShareRecord({
         fileId,
-        email,
-        isPublic,
+        isPublic: true,
         canDownload,
         canReshare,
         expiresAt,
-        wrappedKey: wrappedForRecipient,
       })
 
-      console.log('📧 Share created:', { share, hasWrappedKey: !!wrappedForRecipient })
+      console.log('📧 Public share created:', { share })
 
-      if (isPublic) {
-        const exportedRawKey = await exportRawKeyBase64(rawFileKey)
-        // URL-encode the base64 key to safely embed it in the hash
-        const encodedKey = encodeURIComponent(exportedRawKey)
-        const publicUrl = `${window.location.origin}/s/${share.token}#key=${encodedKey}`
-        await loadShares()
-        return { share, publicUrl }
-      }
-
-      // For private shares, file_keys was already created by edge function
-      // Just refresh and return
+      const exportedRawKey = await exportRawKeyBase64(rawFileKey)
+      // URL-encode the base64 key to safely embed it in the hash
+      const encodedKey = encodeURIComponent(exportedRawKey)
+      const publicUrl = `${window.location.origin}/s/${share.token}#key=${encodedKey}`
       await loadShares()
-      return share
+      return { share, publicUrl }
     } catch (err: any) {
-      setError(err.message || 'Failed to share file')
+      setError(err.message || 'Failed to create public link')
       throw err
     } finally {
       setIsLoading(false)
