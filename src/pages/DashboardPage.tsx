@@ -1,6 +1,5 @@
 import { FileUploader } from '@/components/files/FileUploader'
 import { FileList } from '@/components/files/FileList'
-import { SharedFileList } from '@/components/files/SharedFileList'
 import { useAuthStore } from '@/store/authStore'
 
 export function DashboardPage() {
@@ -34,13 +33,6 @@ export function DashboardPage() {
         <FileList />
       </div>
 
-      {/* Shared Section */}
-      <div className="mt-12">
-        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-          Shared with you
-        </h2>
-        <SharedFileList />
-      </div>
     </div>
   )
 }
