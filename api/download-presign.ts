@@ -28,12 +28,14 @@ export default async function handler(req: Request) {
     )
 
     // Fetch the file record to get storage path and metadata
-    const { data: file, error: fileError } = await supabase
+    const { data: initialFile, error: fileError } = await supabase
       .from('files')
       .select('storage_path, encrypted_metadata, iv')
       .eq('id', fileId)
       .eq('owner_id', user.id) // Ensure owner
       .single()
+
+    let file = initialFile
 
     if (fileError || !file) {
       // Check if it's shared with the user
@@ -58,23 +60,21 @@ export default async function handler(req: Request) {
 
       if (sharedFileError || !sharedFile) throw new AppError('File not found', 404)
       
-      file.storage_path = sharedFile.storage_path
-      file.encrypted_metadata = sharedFile.encrypted_metadata
-      file.iv = sharedFile.iv
+      file = sharedFile
     }
 
     // Generate signed URL
     const { data, error } = await supabase.storage
       .from('encrypted-files')
-      .createSignedUrl(file!.storage_path, 300)
+      .createSignedUrl(file.storage_path, 300)
 
     if (error || !data) throw new AppError('Failed to generate download URL', 500)
 
     return new Response(
       JSON.stringify({ 
         signedUrl: data.signedUrl,
-        encrypted_metadata: file!.encrypted_metadata,
-        iv: file!.iv
+        encrypted_metadata: file.encrypted_metadata,
+        iv: file.iv
       }), 
       {
         status: 200,
