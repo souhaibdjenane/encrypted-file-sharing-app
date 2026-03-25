@@ -100,7 +100,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
               <div className="p-6 overflow-y-auto custom-scrollbar">
                 
                 {/* Public Link Section */}
-                <div className="mb-6 p-5 rounded-xl border-brand-primary/40 bg-brand-primary/5 hover:border-brand-primary/30 transition-colors">
+                <div className="mb-6 p-5 rounded-xl border border-brand-primary/40 bg-brand-primary/5 hover:border-brand-primary/30 transition-colors">
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
                       <h3 className="text-sm font-semibold text-brand-primary">Public Link Access</h3>
@@ -166,7 +166,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName }: ShareModalProp
                       type="datetime-local"
                       value={expiresAt}
                       onChange={(e) => setExpiresAt(e.target.value)}
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono text-sm [color-scheme:dark]"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all font-mono text-sm [color-scheme:dark]"
                     />
                   </div>
                 </div>

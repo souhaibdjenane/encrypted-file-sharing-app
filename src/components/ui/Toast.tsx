@@ -43,7 +43,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               className={`pointer-events-auto px-4 py-3 rounded-xl text-sm font-medium shadow-xl backdrop-blur-md border ${
                 t.type === 'success'
-                  ? 'bg-emerald-900/80 text-emerald-200 border-emerald-700/50'
+                  ? 'bg-brand-primary/80 text-white border-brand-primary/50'
                   : t.type === 'error'
                   ? 'bg-red-900/80 text-red-200 border-red-700/50'
                   : 'bg-zinc-800/80 text-zinc-200 border-zinc-700/50'

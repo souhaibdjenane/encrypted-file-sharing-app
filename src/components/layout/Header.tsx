@@ -75,7 +75,7 @@ export function Header() {
                 ) : (
                   <svg
                     className={`w-4 h-4 transition-colors duration-200 ${
-                      isKeysLoaded ? 'text-emerald-400' : 'text-red-400'
+                      isKeysLoaded ? 'text-brand-primary' : 'text-red-400'
                     }`}
                     fill="none"
                     viewBox="0 0 24 24"
@@ -111,7 +111,7 @@ export function Header() {
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/20"
+                className="px-4 py-2 text-sm font-medium text-white bg-brand-primary hover:bg-brand-secondary rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-brand-primary/20"
               >
                 Sign up
               </Link>
