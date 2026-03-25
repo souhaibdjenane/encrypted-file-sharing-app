@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
 import { CryptoProvider } from '@/crypto/CryptoProvider'
 import { ToastProvider } from '@/components/ui/Toast'
+import { I18nProvider } from '@/i18n'
 import { Layout } from '@/components/layout/Layout'
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import { LandingPage } from '@/pages/LandingPage'
@@ -22,7 +23,6 @@ const queryClient = new QueryClient({
 })
 
 function AppRoutes() {
-  // Initialize auth listener at the app root
   useAuth()
 
   return (
@@ -57,11 +57,13 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <CryptoProvider>
-          <ToastProvider>
-            <AppRoutes />
-          </ToastProvider>
-        </CryptoProvider>
+        <I18nProvider>
+          <CryptoProvider>
+            <ToastProvider>
+              <AppRoutes />
+            </ToastProvider>
+          </CryptoProvider>
+        </I18nProvider>
       </BrowserRouter>
     </QueryClientProvider>
   )

@@ -1,127 +1,60 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
+import { useTranslation } from '@/i18n'
 import { motion } from 'framer-motion'
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
-
+    e.preventDefault(); setError(null); setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      navigate('/dashboard')
-    }
+    if (error) { setError(error.message); setLoading(false) } else { navigate('/dashboard') }
   }
 
   const handleGoogleLogin = async () => {
     setError(null)
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
-    })
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/dashboard` } })
     if (error) setError(error.message)
   }
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background orbs */}
       <div className="absolute top-[-150px] left-[20%] w-[400px] h-[400px] rounded-full animate-float-slow pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(0,125,255,0.06) 0%, transparent 70%)' }} />
       <div className="absolute bottom-[-100px] right-[10%] w-[300px] h-[300px] rounded-full animate-float-slower pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(2,183,223,0.05) 0%, transparent 70%)' }} />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-zinc-100">Welcome back</h1>
-          <p className="mt-2 text-zinc-400">Sign in to access your encrypted vault</p>
+          <h1 className="text-3xl font-bold text-zinc-100">{t.auth.welcomeBack}</h1>
+          <p className="mt-2 text-zinc-400">{t.auth.signInSubtitle}</p>
         </div>
-
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="p-3 rounded-xl text-sm text-red-400"
-                style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)' }}
-              >
-                {error}
-              </div>
-            )}
-
+            {error && <div className="p-3 rounded-xl text-sm text-red-400" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)' }}>{error}</div>}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-2">
-                Email address
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                className="input-field"
-              />
+              <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-2">{t.auth.email}</label>
+              <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t.auth.emailPlaceholder} required className="input-field" />
             </div>
-
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-300 mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="input-field"
-              />
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-300 mb-2">{t.auth.password}</label>
+              <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t.auth.passwordPlaceholder} required className="input-field" />
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 !py-3"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign in'
-              )}
+            <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 !py-3">
+              {loading ? (<><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />{t.auth.signingIn}</>) : t.auth.signIn}
             </button>
-
             <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-zinc-800/60"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-3 text-zinc-500" style={{ background: 'rgba(24,24,27,0.6)' }}>Or continue with</span>
-              </div>
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-800/60"></div></div>
+              <div className="relative flex justify-center text-sm"><span className="px-3 text-zinc-500" style={{ background: 'rgba(24,24,27,0.6)' }}>{t.auth.orContinueWith}</span></div>
             </div>
-
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
+            <button type="button" onClick={handleGoogleLogin}
               className="w-full bg-white hover:bg-zinc-100 text-zinc-950 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-zinc-200 hover:shadow-lg hover:shadow-white/5 active:scale-[0.98]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -133,12 +66,8 @@ export function LoginPage() {
               Google
             </button>
           </form>
-
           <p className="mt-6 text-center text-sm text-zinc-400">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-brand-primary hover:text-brand-secondary font-medium transition-colors">
-              Create one
-            </Link>
+            {t.auth.noAccount}{' '}<Link to="/register" className="text-brand-primary hover:text-brand-secondary font-medium transition-colors">{t.auth.createOne}</Link>
           </p>
         </div>
       </motion.div>
