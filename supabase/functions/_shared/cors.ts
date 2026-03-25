@@ -1,4 +1,4 @@
-const allowedOrigin = Deno.env.get('ALLOWED_ORIGIN') || 'http://localhost:5173'
+const allowedOrigin = Deno.env.get('ALLOWED_ORIGIN') || '*'
 
 export const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Origin': allowedOrigin,
