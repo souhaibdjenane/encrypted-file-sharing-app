@@ -4,7 +4,6 @@ import { useAuthStore } from '@/store/authStore'
 import { supabase } from '@/lib/supabase'
 import { exportEncryptedPrivateKey, importEncryptedPrivateKey } from '@/crypto/backup'
 import { storeKeyPair } from '@/crypto/keyStorage'
-import { Header } from '@/components/layout/Header'
 import { useToast } from '@/components/ui/Toast'
 import { generateSaltBase64 } from '@/crypto/backup'
 
@@ -167,7 +166,6 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col">
-      <Header />
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 pt-24 sm:pt-32">
         <div className="mb-12">
           <h1 className="text-3xl font-bold text-white tracking-tight">Security Settings</h1>
