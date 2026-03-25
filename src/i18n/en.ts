@@ -25,7 +25,7 @@ export const en = {
     feature2Title: 'Secure Sharing',
     feature2Desc: 'Generate time-limited share links. Recipients decrypt files locally with the shared key.',
     feature3Title: 'Zero-Knowledge Architecture',
-    feature3Desc: 'Our servers store only encrypted blobs. No metadata logging, no access to plaintext — your privacy is mathematically guaranteed.',
+    feature3Desc: 'Our servers store only encrypted blobs. No metadata logging, no access to plaintext. Your privacy is mathematically guaranteed.',
     statsAes: 'AES-256-GCM',
     statsZk: 'Zero-Knowledge',
     statsClient: '100% Client-Side',
