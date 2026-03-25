@@ -158,7 +158,7 @@ export default function SettingsPage() {
                   border: '1px solid rgba(63,63,70,0.4)',
                 }}
               >
-                {locales[code].nativeName}
+                {(t.nav.languages as any)[code]}
               </button>
             ))}
           </div>
@@ -265,7 +265,7 @@ export default function SettingsPage() {
             <button onClick={handleDeleteAllFiles} disabled={isDeleting}
               className="px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-medium rounded-xl transition-all disabled:opacity-50 shrink-0 active:scale-[0.97]"
             >
-              {isDeleting ? 'Deleting...' : t.settings.deleteAll}
+              {isDeleting ? t.file.deleting : t.settings.deleteAll}
             </button>
           </div>
         </motion.section>
