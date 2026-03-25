@@ -40,8 +40,8 @@ export default function PublicSharePage() {
           throw new Error('Encryption key missing from URL. The link might be malformed.')
         }
 
-        // Fetch share details via Edge Function
-        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-public-share`, {
+        // Fetch share details via Vercel Function
+        const res = await fetch(`/api/get-public-share`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

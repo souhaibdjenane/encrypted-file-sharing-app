@@ -1,15 +1,10 @@
-const allowedOrigin = (Deno.env.get('ALLOWED_ORIGIN') || '*').replace(/\/$/, '')
-
 export const corsHeaders: Record<string, string> = {
-  'Access-Control-Allow-Origin': allowedOrigin,
+  'Access-Control-Allow-Origin': (process.env.ALLOWED_ORIGIN || '*').replace(/\/$/, ''),
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-client-info, apikey',
   'Access-Control-Max-Age': '86400',
 }
 
-/**
- * Returns a preflight OPTIONS response with CORS headers.
- */
 export function corsResponse(): Response {
   return new Response(null, {
     status: 204,
