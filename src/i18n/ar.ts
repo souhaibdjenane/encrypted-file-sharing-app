@@ -23,7 +23,7 @@ export const ar: TranslationKeys = {
     heroTitle2: 'خصوصية بدون معرفة',
     heroDescription: 'يتم تشفير ملفاتك قبل مغادرة جهازك. أنت والمستلمون فقط من يملكون المفاتيح. حتى VaultShare لا يمكنه قراءة بياناتك.',
     getStarted: 'ابدأ مجاناً',
-    goToDashboard: '← الذهاب للوحة التحكم',
+    goToDashboard: 'الذهاب للوحة التحكم',
     feature1Title: 'تشفير من جانب العميل',
     feature1Desc: 'يتم تشفير الملفات باستخدام AES-256-GCM مباشرة في متصفحك قبل الرفع.',
     feature2Title: 'مشاركة آمنة',

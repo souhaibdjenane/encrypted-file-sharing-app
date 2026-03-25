@@ -23,7 +23,7 @@ export const fr: TranslationKeys = {
     heroTitle2: 'une confidentialité totale',
     heroDescription: "Vos fichiers sont chiffrés avant de quitter votre appareil. Seuls vous et vos destinataires détenez les clés. Même VaultShare ne peut pas lire vos données.",
     getStarted: 'Commencer Gratuitement',
-    goToDashboard: 'Aller au Tableau de Bord →',
+    goToDashboard: 'Aller au Tableau de Bord',
     feature1Title: 'Chiffrement Côté Client',
     feature1Desc: 'Les fichiers sont chiffrés avec AES-256-GCM directement dans votre navigateur avant le téléversement.',
     feature2Title: 'Partage Sécurisé',

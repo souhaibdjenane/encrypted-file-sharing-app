@@ -24,7 +24,7 @@ export const en = {
     heroTitle2: 'zero-knowledge privacy',
     heroDescription: 'Your files are encrypted before they leave your device. Only you and your recipients hold the keys. Not even VaultShare can read your data.',
     getStarted: 'Get Started Free',
-    goToDashboard: 'Go to Dashboard →',
+    goToDashboard: 'Go to Dashboard',
     feature1Title: 'Client-Side Encryption',
     feature1Desc: 'Files are encrypted with AES-256-GCM directly in your browser before upload. Your encryption keys never leave your device.',
     feature2Title: 'Secure Sharing',
