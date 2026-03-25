@@ -229,17 +229,21 @@ export async function createShareRecord(params: {
 
 /**
  * Save a newly re-encrypted file key for a recipient.
+ * Uses upsert to handle re-sharing after revocation (same user may get a new wrapped key).
  */
 export async function saveSharedFileKey(params: {
   fileId: string
   recipientId: string
   wrappedKey: string
 }): Promise<void> {
-  const { error } = await supabase.from('file_keys').insert({
-    file_id: params.fileId,
-    user_id: params.recipientId,
-    wrapped_key: params.wrappedKey,
-  })
+  const { error } = await supabase.from('file_keys').upsert(
+    {
+      file_id: params.fileId,
+      user_id: params.recipientId,
+      wrapped_key: params.wrappedKey,
+    },
+    { onConflict: 'file_id,user_id' }
+  )
 
   if (error) throw new Error(`Failed to save shared file key: ${error.message}`)
 }

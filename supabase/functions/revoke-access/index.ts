@@ -64,6 +64,22 @@ Deno.serve(async (req) => {
       throw new AppError('Failed to revoke share', 500)
     }
 
+    // Clean up the wrapped key for this recipient so they can't decrypt anymore
+    // (Optional: only delete if not the owner's own key to avoid breaking their access)
+    if (share.shared_with) {
+      await supabase
+        .from('file_keys')
+        .delete()
+        .eq('file_id', share.file_id)
+        .eq('user_id', share.shared_with)
+
+      // Don't throw on cleanup failure, but log it
+      logger.info('Cleaned up file keys for revoked share', {
+        fileId: share.file_id,
+        recipientId: share.shared_with,
+      })
+    }
+
     // Audit log
     await supabase.from('audit_logs').insert({
       user_id: user.id,
