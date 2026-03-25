@@ -22,23 +22,26 @@
     @apply bg-zinc-950 text-zinc-100 antialiased;
     font-family: var(--brand-font);
     min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 32px 32px;
   }
 
   ::selection {
     background-color: color-mix(in srgb, var(--brand-primary), transparent 70%);
-    color: color-mix(in srgb, var(--brand-primary), transparent 50%);
+    color: white;
   }
 
   ::-webkit-scrollbar {
-    @apply w-2;
+    @apply w-1.5;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-zinc-900;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-zinc-700 rounded-full;
+    @apply bg-zinc-700/50 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -48,32 +51,69 @@
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-brand-primary hover:bg-brand-secondary text-white font-semibold rounded-lg
-           transition-all duration-200 ease-out active:scale-[0.98] 
+    @apply px-5 py-2.5 text-white font-semibold rounded-xl
+           transition-all duration-300 ease-out active:scale-[0.97]
            disabled:opacity-50 disabled:cursor-not-allowed;
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+    background-size: 200% 200%;
   }
-  
+
   .btn-primary:hover {
-    box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--brand-primary), transparent 75%), 0 4px 6px -4px color-mix(in srgb, var(--brand-primary), transparent 75%);
+    background-position: 100% 0;
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--brand-primary), transparent 60%),
+      0 8px 25px -5px color-mix(in srgb, var(--brand-primary), transparent 70%);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-semibold rounded-xl
-           border border-zinc-700 hover:border-zinc-600
-           transition-all duration-200 ease-out active:scale-[0.98];
+    @apply px-6 py-3 text-zinc-100 font-semibold rounded-xl
+           border border-zinc-700/50 hover:border-zinc-600
+           transition-all duration-300 ease-out active:scale-[0.97];
+    background: rgba(39, 39, 42, 0.5);
+    backdrop-filter: blur(12px);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(63, 63, 70, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-zinc-100
-           placeholder:text-zinc-500 focus:outline-none focus:border-brand-primary 
-           transition-all duration-200;
+    @apply w-full px-4 py-3 rounded-xl text-zinc-100
+           placeholder:text-zinc-500 focus:outline-none
+           transition-all duration-300;
+    background: rgba(24, 24, 27, 0.6);
+    border: 1px solid rgba(63, 63, 70, 0.5);
+    backdrop-filter: blur(8px);
   }
-  
+
   .input-field:focus {
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-primary), transparent 50%);
+    border-color: var(--brand-primary);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--brand-primary), transparent 80%),
+      0 0 20px color-mix(in srgb, var(--brand-primary), transparent 90%);
   }
 
   .card {
-    @apply bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm;
+    @apply rounded-2xl p-6 transition-all duration-300;
+    background: rgba(24, 24, 27, 0.6);
+    border: 1px solid rgba(63, 63, 70, 0.4);
+    backdrop-filter: blur(16px);
+  }
+
+  .card:hover {
+    border-color: rgba(82, 82, 91, 0.6);
+    box-shadow:
+      0 0 30px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .glass {
+    background: rgba(24, 24, 27, 0.5);
+    border: 1px solid rgba(63, 63, 70, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 }

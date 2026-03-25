@@ -35,6 +35,14 @@ function getFileIcon(type: string): string {
   return '📄'
 }
 
+function getFileColorClass(type: string): string {
+  if (type.startsWith('image/')) return 'from-purple-500/20 to-pink-500/20 border-purple-500/20'
+  if (type.startsWith('video/')) return 'from-red-500/20 to-orange-500/20 border-red-500/20'
+  if (type.startsWith('audio/')) return 'from-green-500/20 to-teal-500/20 border-green-500/20'
+  if (type.includes('pdf')) return 'from-red-500/20 to-rose-500/20 border-red-500/20'
+  return 'from-brand-primary/20 to-brand-accent/20 border-brand-primary/20'
+}
+
 interface FileCardProps {
   file: DecryptedFile
 }
@@ -50,7 +58,6 @@ export function FileCard({ file }: FileCardProps) {
   const handleDelete = async () => {
     if (!confirm('Delete this file permanently?')) return
     
-    // Optimistic UI Update
     const queryKey = ['files', user?.id]
     const previousFiles = queryClient.getQueryData(queryKey)
     queryClient.setQueryData(queryKey, (old: any) => old?.filter((f: any) => f.id !== file.id))
@@ -62,7 +69,6 @@ export function FileCard({ file }: FileCardProps) {
       queryClient.invalidateQueries({ queryKey })
     } catch {
       toast('Failed to delete file', 'error')
-      // Rollback
       queryClient.setQueryData(queryKey, previousFiles)
     } finally {
       setDeleting(false)
@@ -75,11 +81,11 @@ export function FileCard({ file }: FileCardProps) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
-      className="card hover:border-zinc-700 transition-colors duration-200 group"
+      className="card group hover:-translate-y-0.5 transition-all duration-300"
     >
-      <div className="flex items-start gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
         {/* Icon */}
-        <div className="w-11 h-11 rounded-xl bg-zinc-800 flex items-center justify-center text-lg flex-shrink-0">
+        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${getFileColorClass(file.decryptedType)} border flex items-center justify-center text-lg flex-shrink-0`}>
           {getFileIcon(file.decryptedType)}
         </div>
 
@@ -116,8 +122,8 @@ export function FileCard({ file }: FileCardProps) {
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        {/* Actions — always visible on mobile, hover on desktop */}
+        <div className="flex items-center gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 flex-wrap sm:flex-nowrap">
           <DownloadButton
             fileId={file.id}
             wrappedKey={file.wrappedKey}
@@ -125,7 +131,11 @@ export function FileCard({ file }: FileCardProps) {
           />
           <button
             onClick={() => setIsShareModalOpen(true)}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-brand-primary bg-brand-primary/10 hover:bg-brand-primary/20 rounded-lg border border-brand-primary/30 transition-all duration-200"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-brand-primary rounded-lg transition-all duration-200"
+            style={{
+              background: 'rgba(0,125,255,0.08)',
+              border: '1px solid rgba(0,125,255,0.2)',
+            }}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -134,7 +144,11 @@ export function FileCard({ file }: FileCardProps) {
           </button>
           <button
             onClick={() => setIsAuditModalOpen(true)}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-400 bg-blue-900/20 hover:bg-blue-900/40 rounded-lg border border-blue-800/30 transition-all duration-200"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-400 rounded-lg transition-all duration-200"
+            style={{
+              background: 'rgba(59,130,246,0.08)',
+              border: '1px solid rgba(59,130,246,0.2)',
+            }}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -144,7 +158,11 @@ export function FileCard({ file }: FileCardProps) {
           <button
             onClick={handleDelete}
             disabled={deleting}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-400 bg-red-900/20 hover:bg-red-900/40 rounded-lg border border-red-800/30 transition-all duration-200 disabled:opacity-50"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-400 rounded-lg transition-all duration-200 disabled:opacity-50"
+            style={{
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.2)',
+            }}
           >
             {deleting ? (
               <div className="w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />

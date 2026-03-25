@@ -30,10 +30,33 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     }, 4000)
   }, [])
 
+  const getToastStyle = (type: string) => {
+    switch (type) {
+      case 'success':
+        return {
+          background: 'rgba(0,125,255,0.9)',
+          border: '1px solid rgba(0,125,255,0.5)',
+          color: 'white',
+        }
+      case 'error':
+        return {
+          background: 'rgba(127,29,29,0.9)',
+          border: '1px solid rgba(239,68,68,0.3)',
+          color: '#fca5a5',
+        }
+      default:
+        return {
+          background: 'rgba(39,39,42,0.9)',
+          border: '1px solid rgba(63,63,70,0.4)',
+          color: '#e4e4e7',
+        }
+    }
+  }
+
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col gap-2 pointer-events-none max-w-[calc(100vw-2rem)]">
         <AnimatePresence>
           {toasts.map(t => (
             <motion.div
@@ -41,13 +64,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              className={`pointer-events-auto px-4 py-3 rounded-xl text-sm font-medium shadow-xl backdrop-blur-md border ${
-                t.type === 'success'
-                  ? 'bg-brand-primary/80 text-white border-brand-primary/50'
-                  : t.type === 'error'
-                  ? 'bg-red-900/80 text-red-200 border-red-700/50'
-                  : 'bg-zinc-800/80 text-zinc-200 border-zinc-700/50'
-              }`}
+              className="pointer-events-auto px-4 py-3 rounded-xl text-sm font-medium shadow-2xl backdrop-blur-xl"
+              style={getToastStyle(t.type)}
             >
               <div className="flex items-center gap-2">
                 {t.type === 'success' && <span>✓</span>}

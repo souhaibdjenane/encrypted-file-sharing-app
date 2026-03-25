@@ -26,13 +26,26 @@ export function DownloadButton({ fileId, wrappedKey, iv }: DownloadButtonProps) 
         onClick={() => download(fileId, wrappedKey, iv)}
         disabled={isWorking}
         title={error || undefined}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-          stage === 'error'
-            ? 'text-red-300 bg-red-900/30 hover:bg-red-900/50 border border-red-800/50'
+        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 disabled:opacity-50"
+        style={{
+          background: stage === 'error'
+            ? 'rgba(239,68,68,0.1)'
             : stage === 'done'
-            ? 'text-brand-primary bg-brand-primary/10 border border-brand-primary/30'
-            : 'text-zinc-300 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700/50'
-        } disabled:opacity-50`}
+            ? 'rgba(0,125,255,0.08)'
+            : 'rgba(39,39,42,0.6)',
+          border: `1px solid ${
+            stage === 'error'
+              ? 'rgba(239,68,68,0.3)'
+              : stage === 'done'
+              ? 'rgba(0,125,255,0.2)'
+              : 'rgba(63,63,70,0.4)'
+          }`,
+          color: stage === 'error'
+            ? '#fca5a5'
+            : stage === 'done'
+            ? 'var(--brand-primary)'
+            : '#d4d4d8',
+        }}
       >
         {isWorking ? (
           <div className="w-3 h-3 border-2 border-zinc-500 border-t-brand-primary rounded-full animate-spin" />
