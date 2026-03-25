@@ -143,19 +143,43 @@ Deno.serve(async (req) => {
 
     // For private shares, save the wrapped key (server-side so it bypasses RLS)
     if (!isPublic && recipientId && wrappedKey) {
-      const { error: keyError } = await supabase.from('file_keys').upsert(
-        {
-          file_id: fileId,
-          user_id: recipientId,
-          wrapped_key: wrappedKey,
-        },
-        { onConflict: 'file_id,user_id' }
-      )
+      // Check if key already exists
+      const { data: existing } = await supabase
+        .from('file_keys')
+        .select('id')
+        .eq('file_id', fileId)
+        .eq('user_id', recipientId)
+        .single()
 
-      if (keyError) {
-        logger.error('Failed to save wrapped key', { error: keyError.message })
-        throw new AppError('Failed to save shared key', 500)
+      if (existing) {
+        // Update existing key
+        const { error: updateError } = await supabase
+          .from('file_keys')
+          .update({ wrapped_key: wrappedKey })
+          .eq('file_id', fileId)
+          .eq('user_id', recipientId)
+
+        if (updateError) {
+          logger.error('Failed to update wrapped key', { error: updateError.message })
+          throw new AppError('Failed to update shared key', 500)
+        }
+      } else {
+        // Insert new key
+        const { error: insertError } = await supabase
+          .from('file_keys')
+          .insert({
+            file_id: fileId,
+            user_id: recipientId,
+            wrapped_key: wrappedKey,
+          })
+
+        if (insertError) {
+          logger.error('Failed to insert wrapped key', { error: insertError.message })
+          throw new AppError('Failed to save shared key', 500)
+        }
       }
+      
+      logger.info('Wrapped key saved for recipient', { fileId, recipientId })
     }
 
     // Audit log

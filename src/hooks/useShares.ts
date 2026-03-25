@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { fetchFileShares, createShareRecord, saveSharedFileKey, revokeAccess, getAuthHeaders, type ShareRecord } from '@/api/filesApi'
+import { fetchFileShares, createShareRecord, revokeAccess, getAuthHeaders, type ShareRecord } from '@/api/filesApi'
 import { useCrypto } from '@/crypto/CryptoProvider'
 import { unwrapFileKey, wrapFileKey } from '@/crypto/keyWrap'
 import { importPublicKey, exportRawKeyBase64 } from '@/crypto/keys'
