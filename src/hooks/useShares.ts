@@ -105,6 +105,8 @@ export function useShares(fileId: string) {
         wrappedKey: wrappedForRecipient,
       })
 
+      console.log('📧 Share created:', { share, hasWrappedKey: !!wrappedForRecipient })
+
       if (isPublic) {
         const exportedRawKey = await exportRawKeyBase64(rawFileKey)
         // URL-encode the base64 key to safely embed it in the hash

@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
       throw new AppError('Failed to create share', 500)
     }
 
-    // For private shares, save the wrapped key (server-side so it bypasses RLS)
+    // For private shares, save the wrapped key (server-side so it bypasses RLS via service-role policy)
     if (!isPublic && recipientId && wrappedKey) {
       // Check if key already exists
       const { data: existing } = await supabase
