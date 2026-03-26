@@ -69,8 +69,8 @@ function AppRoutes() {
             </AuthGuard>
           }
         />
-        <Route path="/s/:token" element={<PublicSharePage />} />
       </Route>
+      <Route path="/s/:token" element={<PublicSharePage />} />
     </Routes>
   )
 }

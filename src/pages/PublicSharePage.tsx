@@ -423,6 +423,44 @@ export default function PublicSharePage() {
         <div className="ps-orb ps-orb-1" />
         <div className="ps-orb ps-orb-2" />
 
+        {/* Top bar */}
+        <div className="ps-topbar">
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="VaultShare" className="h-6 w-auto" />
+            <span className="text-sm font-bold bg-gradient-brand bg-clip-text text-transparent uppercase tracking-wider">{t.appName}</span>
+          </div>
+
+          <div className="relative">
+            <button onClick={() => setLangMenuOpen(!langMenuOpen)} className="ps-lang-btn">
+              <span>{locales[locale].shortName}</span>
+              <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                style={{ transform: langMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <AnimatePresence>
+              {langMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="ps-lang-menu"
+                >
+                  {(Object.keys(locales) as Locale[]).map((code) => (
+                    <button
+                      key={code}
+                      onClick={() => { setLocale(code); setLangMenuOpen(false) }}
+                      className={`ps-lang-item ${locale === code ? 'ps-lang-item-active' : 'ps-lang-item-inactive'}`}
+                    >
+                      {locales[code].shortName} — {locales[code].nativeName}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
 
         {/* Main card */}
         <motion.div
