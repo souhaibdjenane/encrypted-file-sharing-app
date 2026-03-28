@@ -35,7 +35,6 @@ VaultShare follows a strict Zero-Knowledge pattern:
 1. **File Encryption:** The source file is encrypted entirely in the browser using a randomly generated 256-bit AES-GCM key inside an isolated Web Worker. 
 2. **Metadata Protection:** File names and mime-types are encrypted symmetrically prior to database upload to prevent metadata leakage.
 3. **Key Exchange:** The symmetric AES key is encrypted using the file owner's 4096-bit RSA public key, which is natively generated on their device.
-4. **Resharing Mechanics:** When a user shares a file with a recipient, their client unwraps the AES file key using their RSA private key, limits access via Edge Functions conditionally, and re-wraps the AES key using the *recipient's* RSA public key.
 5. **Key Recovery:** The private RSA key can be symmetrically exported using PBKDF2 derived from the user's password utilizing 600,000 iterations and a uniquely generated 16-byte salt, preventing brute-force attacks on backup files.
 6. **Public Links:** Public files export the raw AES key inside the URL hash (`#key=...`). URL Hash fragments are explicitly withheld by browsers during HTTP requests, guaranteeing the server never observes the secret material.
 
@@ -59,6 +58,7 @@ The objective of this project is to implement a secure file sharing solution usi
 
 ## How to Run
 It is hosted at: `https://vaultshare-ten.vercel.app/`
+
 ## Team Members
 - Abdallah Mimoun BENCHEIKH
 - Aya SAHRAOUI
