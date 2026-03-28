@@ -1,8 +1,9 @@
-# VaultShare 🔐
+# VaultShare 
 
 VaultShare is a high-security, end-to-end encrypted file sharing platform designed for absolute data privacy. It relies on a rigorous cryptographic architecture to ensure that the server never stores or views unencrypted files or the keys required to decode them.
+This project focuses on designing and developing a secure web-based file sharing platform that guarantees confidentiality, integrity, and controlled access to shared files. The system ensures that files remain protected throughout their lifecycle, from upload to download.
 
-## 🏗️ Architecture
+## Architecture
 
 VaultShare utilizes a hybrid cryptography model (RSA-OAEP for asymmetric key exchange, AES-256-GCM for rapid symmetric file encryption).
 
@@ -28,7 +29,7 @@ The Web Worker architecture ensures UI fluidity when encrypting massive files of
                   └────────────────────┘          └─────────────────────┘
 ```
 
-## 🛡️ Security Model
+## Security Model
 
 VaultShare follows a strict Zero-Knowledge pattern:
 1. **File Encryption:** The source file is encrypted entirely in the browser using a randomly generated 256-bit AES-GCM key inside an isolated Web Worker. 
@@ -43,48 +44,29 @@ VaultShare follows a strict Zero-Knowledge pattern:
 - Magic bytes file type validation to prevent malicious payload uploads under forged mime-types.
 - PII scrubbing on all Sentry telemetry payloads.
 
-## 🚀 Environment Variables
+## Objective
+The objective of this project is to implement a secure file sharing solution using end-to-end encryption (E2EE). Files are encrypted before being uploaded and can only be decrypted by authorized users. The server never stores files in plaintext format, ensuring that sensitive data remains protected even if the storage system is compromised.
 
-Create a `.env` file referencing your Supabase implementation:
+## Technologies Used
+- React 19
+- TypeScript
+- Vite
+- React Router v7
+- Tailwind CSS (v3.4)
+- Zustand (State management)
+- Supabase
+- Fonts: Sensation, Alyamama(arabic)
 
-| Variable                      | Where used     | Description                          |
-|-------------------------------|----------------|--------------------------------------|
-| `VITE_SUPABASE_URL`           | Frontend       | Your Supabase project URL            |
-| `VITE_SUPABASE_PUBLISHABLE_KEY`| Frontend       | `sb_publishable_...` key (safe to expose) |
-| `VITE_SENTRY_DSN`             | Frontend       | Sentry error tracking DSN            |
-| `SUPABASE_URL`                | Edge Functions | Auto-injected by Supabase local edge |
-| `SUPABASE_SECRET_KEY`         | Edge Functions | `sb_secret_...` key (set manually via secrets)|
-| `UPSTASH_REDIS_REST_URL`      | Edge Functions | Upstash rate limiting URL            |
-| `UPSTASH_REDIS_REST_TOKEN`    | Edge Functions | Upstash rate limiting token          |
-| `ALLOWED_ORIGIN`              | Edge Functions | CORS allowed origin                  |
+## How to Run
+It is hosted at: `https://vaultshare-ten.vercel.app/`
+## Team Members
+- Abdallah Mimoun BENCHEIKH
+- Aya SAHRAOUI
+- Souhaib DJENANE
+- Kawther Ikhlas BOUREGAA
+- Sondes GASMI
 
-## 💻 Local Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/vaultshare.git
-   cd vaultshare
-   ```
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-3. **Initialize the local Supabase environment:**
-   ```bash
-   npx supabase start
-   ```
-4. **Push database migrations to your project via CLI:**
-   ```bash
-   npx supabase db push
-   ```
-5. **Run the local development server:**
-   ```bash
-   npm run dev
-   ```
-
-## 🧪 Pre-Launch Security Checklist
-
-- [x] Web Workers are effectively segregating memory.
-- [x] IndexedDB securely caches non-extractable asymmetric keypairs internally.
-- [x] Rate limiting is enabled via Upstash Redis edge integrations to nullify brute-force key attacks.
-- [x] Supabase Row-Level Security validates auth credentials strictly at the table layer.
+## Course Information
+- Course: Computer Network and Security
+- Professor: Dr. Karim Lounis
+- Academic Year: 2025 — 2026
